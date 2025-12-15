@@ -340,6 +340,101 @@ Processing: [████████████████░░░░] 80% (
 
 ---
 
+## 🎨 Phase 5.1: Font Registration & Output Naming
+
+**Subagent Task:** Add OS font support and customizable output filenames
+
+### Requirements
+
+1. **OS Font Registration for PDF:**
+   - Use `FontFactory.registerDirectories()` to register system fonts
+   - User can specify exact font name via `--font` option
+   - Show registered fonts in CLI help output
+
+2. **Font Support for PNG:**
+   - Use Java AWT `GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()`
+   - Font lookup from system fonts
+
+3. **Output Filename Customization:**
+   - New CLI options: `--prefix` and `--postfix`
+   - Output format: `<prefix>-<base-template-name>-<csv_text_first_part>-<postfix>.<format>`
+   - Default for prefix and postfix is null (empty)
+   - If prefix/postfix is null, don't include the hyphen separator
+
+### Test First
+
+```java
+// FontServiceTest.java
+@Test void shouldRegisterSystemFontsForPdf()
+@Test void shouldGetListOfAvailablePdfFonts()
+@Test void shouldGetListOfAvailablePngFonts()
+@Test void shouldReturnDefaultFontWhenRequestedFontNotFound()
+
+// OutputFileNameGeneratorTest.java
+@Test void shouldGenerateFilenameWithPrefixAndPostfix()
+@Test void shouldGenerateFilenameWithOnlyPrefix()
+@Test void shouldGenerateFilenameWithOnlyPostfix()
+@Test void shouldGenerateFilenameWithoutPrefixAndPostfix()
+@Test void shouldHandleTextWithSpecialCharacters()
+@Test void shouldTruncateLongTextInFilename()
+```
+
+### Implementation Tasks
+
+1. **`FontService.java`** — Font management service
+   ```java
+   @Service
+   public class FontService {
+       public void registerSystemFonts(); // calls FontFactory.registerDirectories()
+       public Set<String> getAvailablePdfFonts(); // FontFactory.getRegisteredFonts()
+       public Set<String> getAvailablePngFonts(); // GraphicsEnvironment fonts
+       public boolean isFontAvailable(String fontName, String format);
+   }
+   ```
+
+2. **`OutputFileNameGenerator.java`** — Filename generation utility
+   ```java
+   public class OutputFileNameGenerator {
+       public static String generate(
+           String templatePath,
+           String text,
+           String prefix,
+           String postfix,
+           String format
+       );
+   }
+   ```
+
+3. **Update `RenderCommand.java`** — Add new CLI options:
+   ```
+   --prefix           : Output filename prefix (default: null)
+   --postfix          : Output filename postfix (default: null)
+   --list-fonts       : List available fonts and exit
+   ```
+
+4. **Update `AppConfig.java`** — Add FontService bean
+
+5. **Update output filename logic** in `RenderCommand.call()`:
+   - Use `OutputFileNameGenerator` for filename generation
+   - Extract first word from CSV text for filename
+
+### Context7 MCP Usage
+- **Use Context7 for OpenPDF** — search `openpdf` for:
+  - `FontFactory.registerDirectories()` API
+  - `FontFactory.getRegisteredFonts()` API
+  - Custom font registration
+
+### Acceptance Criteria
+- [ ] `FontFactory.registerDirectories()` called on startup
+- [ ] `--list-fonts` displays available fonts
+- [ ] `--prefix` and `--postfix` options work correctly
+- [ ] Output filenames follow the pattern
+- [ ] Font help shows in CLI `--help`
+- [ ] All tests pass
+- [ ] Update `IMPLEMENTATION_PROGRESS.md`
+
+---
+
 ## 🧪 Phase 6: Integration Tests & Packaging
 
 **Subagent Task:** End-to-end tests and JAR packaging
@@ -352,6 +447,8 @@ Processing: [████████████████░░░░] 80% (
 @Test void shouldGeneratePngsFromCsvUsingPngTemplate()
 @Test void shouldHandleLargeCsvFileInParallel()
 @Test void shouldCreateOutputDirectoryIfNotExists()
+@Test void shouldGenerateFilesWithCustomPrefixPostfix()
+@Test void shouldUseCustomFont()
 ```
 
 ### Packaging Tasks

@@ -83,14 +83,30 @@
 
 ---
 
+## Phase 5.1: Font Registration & Output Naming
+
+| Task | Status | File(s) | Notes |
+|------|--------|---------|-------|
+| FontServiceTest | ✅ | `test/.../service/FontServiceTest.java` | 8 tests - TDD approach |
+| FontService | ✅ | `service/FontService.java` | System font registration |
+| OutputFileNameGeneratorTest | ✅ | `test/.../util/OutputFileNameGeneratorTest.java` | 16 tests - TDD approach |
+| OutputFileNameGenerator | ✅ | `util/OutputFileNameGenerator.java` | Custom filename pattern |
+| Update RenderCommand | ✅ | `cli/RenderCommand.java` | Added --prefix, --postfix, --list-fonts |
+| Update AppConfig | ✅ | `config/AppConfig.java` | Added FontService bean |
+
+**Context7 Usage:** `openpdf` — FontFactory.registerDirectories(), getRegisteredFonts()
+
+---
+
 ## Phase 6: Integration & Packaging
 
 | Task | Status | File(s) | Notes |
 |------|--------|---------|-------|
-| EndToEndTest | ⬜ | `test/.../integration/EndToEndTest.java` | Full workflow tests |
-| Test resources | ⬜ | `src/test/resources/` | sample.csv, template.pdf, template.png |
-| README.md | ⬜ | `README.md` | Usage documentation |
-| Final build verification | ⬜ | | `./gradlew build` produces JAR |
+| TestResourceGenerator | ✅ | `test/.../integration/TestResourceGenerator.java` | Utility to create PDF/PNG templates |
+| EndToEndTest | ✅ | `test/.../integration/EndToEndTest.java` | 15 integration tests - full workflow |
+| Test resources | ✅ | `src/test/resources/` | sample.csv, template.pdf, template.png |
+| README.md | ✅ | `README.md` | Full usage documentation |
+| Final build verification | ✅ | | JAR tested with --help, --version, --list-fonts |
 
 ---
 
@@ -104,7 +120,7 @@
 | 3 | PNG Renderer | 15-Dec-2025 | 15-Dec-2025 | ~5min | None |
 | 4 | Parallel Exec | 15-Dec-2025 | 15-Dec-2025 | ~5min | None |
 | 5 | CLI | 15-Dec-2025 | 15-Dec-2025 | ~5min | Fixed error output handling |
-| 6 | Integration | | | | |
+| 6 | Integration | 16-Dec-2025 | 16-Dec-2025 | ~5min | None |
 
 ---
 
@@ -127,6 +143,10 @@
 | 15-Dec-2025 | 4 | 11 | 11 | 0 | ParallelExecutorServiceTest(6) + ProgressTrackerTest(5) |
 | 15-Dec-2025 | 5 | 10 | 10 | 0 | RenderCommandTest - all pass |
 | 15-Dec-2025 | All | 38 | 38 | 0 | Full test suite passing (Phases 1-5) |
+| 15-Dec-2025 | 5.1 | 29 | 29 | 0 | FontServiceTest(8) + OutputFileNameGeneratorTest(16) + RenderCommandTest(5 new) |
+| 15-Dec-2025 | All | 67 | 67 | 0 | Full test suite passing (Phases 1-5.1) |
+| 16-Dec-2025 | 6 | 15 | 15 | 0 | EndToEndTest - integration tests |
+| 16-Dec-2025 | All | 81 | 81 | 0 | Full test suite passing (All Phases Complete) |
 
 ---
 
@@ -134,7 +154,7 @@
 
 | Date | Version | JAR Location | Size | Notes |
 |------|---------|--------------|------|-------|
-| | | | | |
+| 16-Dec-2025 | 1.0-SNAPSHOT | build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar | Fat JAR | All deps included |
 
 ---
 

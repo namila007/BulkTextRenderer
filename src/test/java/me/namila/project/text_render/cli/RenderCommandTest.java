@@ -2,6 +2,7 @@ package me.namila.project.text_render.cli;
 
 import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.service.CsvReaderService;
+import me.namila.project.text_render.service.FontService;
 import me.namila.project.text_render.service.ParallelExecutorService;
 import me.namila.project.text_render.service.PdfRendererService;
 import me.namila.project.text_render.service.PngRendererService;
@@ -34,7 +35,8 @@ class RenderCommandTest {
             new CsvReaderService(),
             new PdfRendererService(),
             new PngRendererService(),
-            new ParallelExecutorService()
+            new ParallelExecutorService(),
+            new FontService()
         );
         commandLine = new CommandLine(command);
         stdout = new StringWriter();
@@ -216,6 +218,95 @@ class RenderCommandTest {
 
         // Then
         assertThat(exitCode).isNotEqualTo(0);
+    }
+
+    @Test
+    void shouldAcceptPrefixOption() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.pdf", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+
+        // When
+        commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "--x", "100",
+            "--y", "200",
+            "--prefix", "wedding"
+        );
+
+        // Then
+        assertThat(command.getPrefix()).isEqualTo("wedding");
+    }
+
+    @Test
+    void shouldAcceptPostfixOption() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.pdf", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+
+        // When
+        commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "--x", "100",
+            "--y", "200",
+            "--postfix", "final"
+        );
+
+        // Then
+        assertThat(command.getPostfix()).isEqualTo("final");
+    }
+
+    @Test
+    void shouldAcceptBothPrefixAndPostfix() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.pdf", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+
+        // When
+        commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "--x", "100",
+            "--y", "200",
+            "--prefix", "batch1",
+            "--postfix", "v2"
+        );
+
+        // Then
+        assertThat(command.getPrefix()).isEqualTo("batch1");
+        assertThat(command.getPostfix()).isEqualTo("v2");
+    }
+
+    @Test
+    void shouldListFontsWhenOptionProvided() {
+        // When
+        int exitCode = commandLine.execute("--list-fonts");
+
+        // Then
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(stdout.toString()).contains("Available PDF Fonts");
+        assertThat(stdout.toString()).contains("Available PNG Fonts");
+    }
+
+    @Test
+    void shouldHaveNullPrefixAndPostfixByDefault() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.pdf", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+
+        // When - no prefix/postfix specified
+        commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "--x", "100",
+            "--y", "200"
+        );
+
+        // Then
+        assertThat(command.getPrefix()).isNull();
+        assertThat(command.getPostfix()).isNull();
     }
 
     private Path createTempFile(String name, String content) throws IOException {

@@ -61,9 +61,10 @@
 
 | Task | Status | File(s) | Notes |
 |------|--------|---------|-------|
-| ProgressTracker | ⬜ | `util/ProgressTracker.java` | Thread-safe, console output |
-| ParallelExecutorService | ⬜ | `service/ParallelExecutorService.java` | Virtual threads |
-| ParallelExecutorServiceTest | ⬜ | `test/.../ParallelExecutorServiceTest.java` | Write FIRST (TDD) |
+| ProgressTrackerTest | ✅ | `test/.../util/ProgressTrackerTest.java` | 5 tests - TDD approach |
+| ProgressTracker | ✅ | `util/ProgressTracker.java` | Thread-safe AtomicInteger, console output |
+| ParallelExecutorServiceTest | ✅ | `test/.../ParallelExecutorServiceTest.java` | 6 tests - TDD approach |
+| ParallelExecutorService | ✅ | `service/ParallelExecutorService.java` | Virtual threads + Semaphore |
 
 **Context7 Usage:** `java virtual threads` — ExecutorService patterns
 
@@ -73,10 +74,10 @@
 
 | Task | Status | File(s) | Notes |
 |------|--------|---------|-------|
-| AppConfig | ⬜ | `config/AppConfig.java` | Spring @Configuration |
-| RenderCommand | ⬜ | `cli/RenderCommand.java` | Picocli @Command |
-| BulkTextRendererApp | ⬜ | `BulkTextRendererApp.java` | Main entry point |
-| RenderCommandTest | ⬜ | `test/.../RenderCommandTest.java` | Write FIRST (TDD) |
+| RenderCommandTest | ✅ | `test/.../cli/RenderCommandTest.java` | 10 tests - TDD approach |
+| AppConfig | ✅ | `config/AppConfig.java` | Spring @Configuration with all beans |
+| RenderCommand | ✅ | `cli/RenderCommand.java` | Picocli @Command with all options |
+| BulkTextRendererApp | ✅ | `BulkTextRendererApp.java` | Main entry point |
 
 **Context7 Usage:** `picocli` — @Command, @Option annotations
 
@@ -101,8 +102,8 @@
 | 1 | Models & CSV | 15-Dec-2025 | 15-Dec-2025 | ~3min | None |
 | 2 | PDF Renderer | 15-Dec-2025 | 15-Dec-2025 | ~5min | None |
 | 3 | PNG Renderer | 15-Dec-2025 | 15-Dec-2025 | ~5min | None |
-| 4 | Parallel Exec | | | | |
-| 5 | CLI | | | | |
+| 4 | Parallel Exec | 15-Dec-2025 | 15-Dec-2025 | ~5min | None |
+| 5 | CLI | 15-Dec-2025 | 15-Dec-2025 | ~5min | Fixed error output handling |
 | 6 | Integration | | | | |
 
 ---
@@ -123,6 +124,9 @@
 | 15-Dec-2025 | 2 | 6 | 6 | 0 | PdfRendererServiceTest - all pass |
 | 15-Dec-2025 | 3 | 6 | 6 | 0 | PngRendererServiceTest - all pass |
 | 15-Dec-2025 | All | 17 | 17 | 0 | Full test suite passing |
+| 15-Dec-2025 | 4 | 11 | 11 | 0 | ParallelExecutorServiceTest(6) + ProgressTrackerTest(5) |
+| 15-Dec-2025 | 5 | 10 | 10 | 0 | RenderCommandTest - all pass |
+| 15-Dec-2025 | All | 38 | 38 | 0 | Full test suite passing (Phases 1-5) |
 
 ---
 

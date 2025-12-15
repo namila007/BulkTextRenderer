@@ -1,0 +1,45 @@
+package me.namila.project.text_render.config;
+
+import me.namila.project.text_render.cli.RenderCommand;
+import me.namila.project.text_render.service.CsvReaderService;
+import me.namila.project.text_render.service.ParallelExecutorService;
+import me.namila.project.text_render.service.PdfRendererService;
+import me.namila.project.text_render.service.PngRendererService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * Spring configuration for BulkTextRenderer application.
+ */
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public CsvReaderService csvReaderService() {
+        return new CsvReaderService();
+    }
+
+    @Bean
+    public PdfRendererService pdfRendererService() {
+        return new PdfRendererService();
+    }
+
+    @Bean
+    public PngRendererService pngRendererService() {
+        return new PngRendererService();
+    }
+
+    @Bean
+    public ParallelExecutorService parallelExecutorService() {
+        return new ParallelExecutorService();
+    }
+
+    @Bean
+    public RenderCommand renderCommand(CsvReaderService csvReaderService,
+                                       PdfRendererService pdfRendererService,
+                                       PngRendererService pngRendererService,
+                                       ParallelExecutorService parallelExecutorService) {
+        return new RenderCommand(csvReaderService, pdfRendererService, 
+                                pngRendererService, parallelExecutorService);
+    }
+}

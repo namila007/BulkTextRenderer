@@ -40,9 +40,9 @@
 
 | Task | Status | File(s) | Notes |
 |------|--------|---------|-------|
-| RendererService interface | ⬜ | `service/RendererService.java` | `void render(RenderJob)` |
-| PdfRendererService | ⬜ | `service/PdfRendererService.java` | OpenPDF implementation |
-| PdfRendererServiceTest | ⬜ | `test/.../PdfRendererServiceTest.java` | Write FIRST (TDD) |
+| RendererService interface | ✅ | `service/RendererService.java` | `void render(RenderJob)` |
+| PdfRendererServiceTest | ✅ | `test/.../PdfRendererServiceTest.java` | 6 tests - TDD approach |
+| PdfRendererService | ✅ | `service/PdfRendererService.java` | OpenPDF PdfStamper, showTextAligned |
 
 **Context7 Usage:** `openpdf` — PdfReader, PdfStamper, BaseFont, PdfContentByte
 
@@ -52,8 +52,8 @@
 
 | Task | Status | File(s) | Notes |
 |------|--------|---------|-------|
-| PngRendererService | ⬜ | `service/PngRendererService.java` | Java AWT Graphics2D |
-| PngRendererServiceTest | ⬜ | `test/.../PngRendererServiceTest.java` | Write FIRST (TDD) |
+| PngRendererServiceTest | ✅ | `test/.../PngRendererServiceTest.java` | 6 tests - TDD approach |
+| PngRendererService | ✅ | `service/PngRendererService.java` | Java AWT Graphics2D, ImageIO |
 
 ---
 
@@ -99,8 +99,8 @@
 |-------|----------|---------|-----------|----------|--------|
 | 0 | Setup | 15-Dec-2025 | 15-Dec-2025 | ~2min | None |
 | 1 | Models & CSV | 15-Dec-2025 | 15-Dec-2025 | ~3min | None |
-| 2 | PDF Renderer | | | | |
-| 3 | PNG Renderer | | | | |
+| 2 | PDF Renderer | 15-Dec-2025 | 15-Dec-2025 | ~5min | None |
+| 3 | PNG Renderer | 15-Dec-2025 | 15-Dec-2025 | ~5min | None |
 | 4 | Parallel Exec | | | | |
 | 5 | CLI | | | | |
 | 6 | Integration | | | | |
@@ -120,6 +120,9 @@
 | Date | Phase | Tests Run | Passed | Failed | Notes |
 |------|-------|-----------|--------|--------|-------|
 | 15-Dec-2025 | 1 | 5 | 5 | 0 | CsvReaderServiceTest - all pass |
+| 15-Dec-2025 | 2 | 6 | 6 | 0 | PdfRendererServiceTest - all pass |
+| 15-Dec-2025 | 3 | 6 | 6 | 0 | PngRendererServiceTest - all pass |
+| 15-Dec-2025 | All | 17 | 17 | 0 | Full test suite passing |
 
 ---
 

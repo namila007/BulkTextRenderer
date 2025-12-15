@@ -1,5 +1,10 @@
 # BulkTextRenderer
 
+[![GitHub Actions - Gradle](https://github.com/namila007/BulkTextRenderer/actions/workflows/build.yml/badge.svg)](https://github.com/namila007/BulkTextRenderer/actions/workflows/build.yml)
+[![Java](https://img.shields.io/badge/java-24-blue.svg)](https://www.oracle.com/java/)
+[![Gradle](https://img.shields.io/badge/Gradle-v8.14-green.svg)](https://gradle.org/)
+[![GitHub License](https://img.shields.io/github/license/namila007/BulkTextRenderer)](https://github.com/namila007/BulkTextRenderer/blob/master/LICENSE)
+
 A high-performance CLI tool for bulk rendering text onto PDF and PNG templates. Perfect for generating personalized invitations, certificates, name cards, and other documents from a CSV list of names or text entries.
 
 ## Features
@@ -216,7 +221,7 @@ Exit codes:
 
 ## License
 
-MIT License
+BulkTextRenderer is released under the MIT License. See [LICENSE](LICENSE) for the full text.
 
 ## Contributing
 

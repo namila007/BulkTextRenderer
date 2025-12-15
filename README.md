@@ -1,0 +1,231 @@
+# BulkTextRenderer
+
+[![GitHub Actions - Gradle](https://github.com/namila007/BulkTextRenderer/actions/workflows/build.yml/badge.svg)](https://github.com/namila007/BulkTextRenderer/actions/workflows/build.yml)
+[![Java](https://img.shields.io/badge/java-24-blue.svg)](https://www.oracle.com/java/)
+[![Gradle](https://img.shields.io/badge/Gradle-v8.14-green.svg)](https://gradle.org/)
+[![GitHub License](https://img.shields.io/github/license/namila007/BulkTextRenderer)](https://github.com/namila007/BulkTextRenderer/blob/master/LICENSE)
+
+A high-performance CLI tool for bulk rendering text onto PDF and PNG templates. Perfect for generating personalized invitations, certificates, name cards, and other documents from a CSV list of names or text entries.
+
+## Features
+
+- **PDF and PNG Support**: Render text on both PDF and PNG template files
+- **Bulk Processing**: Process multiple entries from a CSV file in one command
+- **Parallel Execution**: Configurable multi-threaded processing for faster rendering
+- **Flexible Text Positioning**: Precise X/Y coordinate placement
+- **Text Alignment**: Left, center, or right alignment options
+- **Custom Fonts**: Use system fonts or built-in PDF fonts
+- **Customizable Output**: Add prefix and postfix to output filenames
+- **Progress Tracking**: Real-time progress feedback during processing
+
+## Prerequisites
+
+- **Java 24** or higher
+- **Gradle 8.x** (wrapper included)
+
+## Build Instructions
+
+### Build the Project
+
+```bash
+./gradlew build
+```
+
+### Run Tests
+
+```bash
+./gradlew test
+```
+
+### Build Fat JAR
+
+The build automatically creates a fat JAR with all dependencies:
+
+```bash
+./gradlew jar
+```
+
+The JAR file will be created at: `build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar`
+
+## Usage
+
+### Basic Usage
+
+```bash
+java -jar build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar \
+  -t template.pdf \
+  -c names.csv \
+  -o output \
+  --x 297 \
+  --y 500
+```
+
+### With All Options
+
+```bash
+java -jar build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar \
+  -t template.pdf \
+  -c names.csv \
+  -o output \
+  --x 297 \
+  --y 500 \
+  -a CENTER \
+  -f Helvetica \
+  -s 24 \
+  -p 4 \
+  --prefix wedding \
+  --postfix final
+```
+
+### List Available Fonts
+
+```bash
+java -jar build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar --list-fonts
+```
+
+### Display Help
+
+```bash
+java -jar build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar --help
+```
+
+## CLI Options Reference
+
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--template` | `-t` | Template file path (PDF or PNG) | *required* |
+| `--csv` | `-c` | CSV file path containing text entries | *required* |
+| `--output` | `-o` | Output folder for generated files | `./output` |
+| `--x` | | X coordinate for text placement | *required* |
+| `--y` | | Y coordinate for text placement | *required* |
+| `--align` | `-a` | Text alignment: LEFT, CENTER, RIGHT | `LEFT` |
+| `--font` | `-f` | Font name | `Times New Roman` |
+| `--font-size` | `-s` | Font size in points | `12` |
+| `--threads` | `-p` | Number of parallel threads | CPU cores |
+| `--prefix` | | Output filename prefix | *none* |
+| `--postfix` | | Output filename postfix | *none* |
+| `--list-fonts` | | List available fonts and exit | |
+| `--help` | `-h` | Display help message | |
+| `--version` | `-V` | Display version information | |
+
+## CSV File Format
+
+The CSV file should contain one text entry per line:
+
+```csv
+John Doe
+Jane Smith
+Robert Brown
+Emily Davis
+```
+
+**Note**: Lines are trimmed of leading/trailing whitespace. Empty lines are skipped.
+
+## Coordinate System
+
+### PDF Templates
+- Origin (0,0) is at the **bottom-left** corner
+- Y values increase **upward**
+- X values increase **rightward**
+- For A4 pages: width = 595, height = 842 points
+
+### PNG Templates
+- Origin (0,0) is at the **top-left** corner
+- Y values increase **downward**
+- X values increase **rightward**
+
+## Available Fonts
+
+### PDF Fonts
+Built-in fonts that work without any system dependencies:
+- Helvetica
+- Courier
+- Times New Roman (Times)
+
+### PNG Fonts
+Any system-installed font can be used. Common options:
+- SansSerif
+- Serif
+- Monospaced
+
+Use `--list-fonts` to see all available fonts on your system.
+
+## Examples
+
+### Wedding Invitations (PDF)
+
+```bash
+java -jar build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar \
+  -t wedding-template.pdf \
+  -c guests.csv \
+  -o invitations \
+  --x 297 \
+  --y 500 \
+  -a CENTER \
+  -f Helvetica \
+  -s 28 \
+  --prefix invite \
+  --postfix 2024
+```
+
+### Name Badges (PNG)
+
+```bash
+java -jar build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar \
+  -t badge-template.png \
+  -c attendees.csv \
+  -o badges \
+  --x 200 \
+  --y 150 \
+  -a CENTER \
+  -f SansSerif \
+  -s 32
+```
+
+### Certificates (PDF, Parallel Processing)
+
+```bash
+java -jar build/libs/BulkTextRenderer-1.0-SNAPSHOT.jar \
+  -t certificate-template.pdf \
+  -c recipients.csv \
+  -o certificates \
+  --x 400 \
+  --y 350 \
+  -a CENTER \
+  -f "Times New Roman" \
+  -s 36 \
+  -p 8
+```
+
+## Output
+
+Files are saved to the specified output folder with names derived from the text content:
+- Spaces are replaced with underscores
+- Special characters are removed
+- Optional prefix and postfix are added
+
+Example: `wedding-John_Doe-final.pdf`
+
+## Error Handling
+
+The tool provides clear error messages for:
+- Missing template or CSV files
+- Invalid file formats
+- Missing required options
+- File permission issues
+
+Exit codes:
+- `0` - Success
+- `1` - Runtime error (file not found, processing error)
+- `2` - Invalid arguments
+
+## License
+
+BulkTextRenderer is released under the MIT License. See [LICENSE](LICENSE) for the full text.
+
+## Contributing
+
+Contributions are welcome! Please ensure:
+1. All tests pass (`./gradlew test`)
+2. Code follows existing patterns
+3. New features include tests

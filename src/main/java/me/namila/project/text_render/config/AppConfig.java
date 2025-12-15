@@ -2,6 +2,7 @@ package me.namila.project.text_render.config;
 
 import me.namila.project.text_render.cli.RenderCommand;
 import me.namila.project.text_render.service.CsvReaderService;
+import me.namila.project.text_render.service.FontService;
 import me.namila.project.text_render.service.ParallelExecutorService;
 import me.namila.project.text_render.service.PdfRendererService;
 import me.namila.project.text_render.service.PngRendererService;
@@ -35,11 +36,17 @@ public class AppConfig {
     }
 
     @Bean
+    public FontService fontService() {
+        return new FontService();
+    }
+
+    @Bean
     public RenderCommand renderCommand(CsvReaderService csvReaderService,
                                        PdfRendererService pdfRendererService,
                                        PngRendererService pngRendererService,
-                                       ParallelExecutorService parallelExecutorService) {
+                                       ParallelExecutorService parallelExecutorService,
+                                       FontService fontService) {
         return new RenderCommand(csvReaderService, pdfRendererService, 
-                                pngRendererService, parallelExecutorService);
+                                pngRendererService, parallelExecutorService, fontService);
     }
 }

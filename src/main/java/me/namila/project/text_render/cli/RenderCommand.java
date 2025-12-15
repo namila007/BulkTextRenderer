@@ -4,10 +4,12 @@ import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
 import me.namila.project.text_render.service.CsvReaderService;
+import me.namila.project.text_render.service.FontService;
 import me.namila.project.text_render.service.ParallelExecutorService;
 import me.namila.project.text_render.service.PdfRendererService;
 import me.namila.project.text_render.service.PngRendererService;
 import me.namila.project.text_render.service.RendererService;
+import me.namila.project.text_render.util.OutputFileNameGenerator;
 import me.namila.project.text_render.util.ProgressTracker;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -34,15 +36,16 @@ public class RenderCommand implements Callable<Integer> {
     private final PdfRendererService pdfRendererService;
     private final PngRendererService pngRendererService;
     private final ParallelExecutorService parallelExecutorService;
+    private final FontService fontService;
 
     @CommandLine.Spec
     private CommandLine.Model.CommandSpec spec;
 
-    @Option(names = {"-t", "--template"}, required = true, 
+    @Option(names = {"-t", "--template"}, 
             description = "Template file path (PDF or PNG)")
     private Path templatePath;
 
-    @Option(names = {"-c", "--csv"}, required = true, 
+    @Option(names = {"-c", "--csv"}, 
             description = "CSV file path containing text entries")
     private Path csvPath;
 
@@ -50,13 +53,13 @@ public class RenderCommand implements Callable<Integer> {
             description = "Output folder (default: ${DEFAULT-VALUE})")
     private Path outputFolder;
 
-    @Option(names = {"--x"}, required = true, 
+    @Option(names = {"--x"}, 
             description = "X coordinate for text placement")
-    private float x;
+    private Float x;
 
-    @Option(names = {"--y"}, required = true, 
+    @Option(names = {"--y"}, 
             description = "Y coordinate for text placement")
-    private float y;
+    private Float y;
 
     @Option(names = {"-a", "--align"}, defaultValue = "LEFT", 
             description = "Text alignment: LEFT, CENTER, RIGHT (default: ${DEFAULT-VALUE})")
@@ -74,19 +77,44 @@ public class RenderCommand implements Callable<Integer> {
             description = "Number of parallel threads (default: available processors)")
     private Integer parallelism;
 
+    @Option(names = {"--prefix"}, 
+            description = "Output filename prefix")
+    private String prefix;
+
+    @Option(names = {"--postfix"}, 
+            description = "Output filename postfix")
+    private String postfix;
+
+    @Option(names = {"--list-fonts"}, 
+            description = "List available fonts for PDF and PNG rendering and exit")
+    private boolean listFonts;
+
     public RenderCommand(CsvReaderService csvReaderService,
                         PdfRendererService pdfRendererService,
                         PngRendererService pngRendererService,
-                        ParallelExecutorService parallelExecutorService) {
+                        ParallelExecutorService parallelExecutorService,
+                        FontService fontService) {
         this.csvReaderService = csvReaderService;
         this.pdfRendererService = pdfRendererService;
         this.pngRendererService = pngRendererService;
         this.parallelExecutorService = parallelExecutorService;
+        this.fontService = fontService;
     }
 
     @Override
     public Integer call() {
         try {
+            // Handle --list-fonts option
+            if (listFonts) {
+                listAvailableFonts();
+                return 0;
+            }
+
+            // Validate required options for rendering
+            if (!validateRequiredOptions()) {
+                return 2;
+            }
+
             // Validate files exist
             if (!validateFiles()) {
                 return 1;
@@ -128,6 +156,30 @@ public class RenderCommand implements Callable<Integer> {
         }
     }
 
+    private boolean validateRequiredOptions() {
+        PrintWriter err = spec.commandLine().getErr();
+        boolean valid = true;
+
+        if (templatePath == null) {
+            err.println("Missing required option: '--template=<templatePath>'");
+            valid = false;
+        }
+        if (csvPath == null) {
+            err.println("Missing required option: '--csv=<csvPath>'");
+            valid = false;
+        }
+        if (x == null) {
+            err.println("Missing required option: '--x=<x>'");
+            valid = false;
+        }
+        if (y == null) {
+            err.println("Missing required option: '--y=<y>'");
+            valid = false;
+        }
+
+        return valid;
+    }
+
     private boolean validateFiles() {
         PrintWriter err = spec.commandLine().getErr();
         
@@ -160,8 +212,9 @@ public class RenderCommand implements Callable<Integer> {
     }
 
     private RenderJob createRenderJob(String text, TextConfig textConfig, String extension) {
-        String sanitizedText = sanitizeFilename(text);
-        Path outputPath = outputFolder.resolve(sanitizedText + "." + extension);
+        String outputFilename = OutputFileNameGenerator.generate(
+            templatePath.toString(), text, prefix, postfix, extension);
+        Path outputPath = outputFolder.resolve(outputFilename);
         return new RenderJob(text, textConfig, templatePath, outputPath);
     }
 
@@ -171,10 +224,16 @@ public class RenderCommand implements Callable<Integer> {
         return dotIndex > 0 ? filename.substring(dotIndex + 1) : "";
     }
 
-    private String sanitizeFilename(String text) {
-        return text.replaceAll("[^a-zA-Z0-9.-]", "_")
-                  .replaceAll("_+", "_")
-                  .substring(0, Math.min(text.length(), 100));
+    private void listAvailableFonts() {
+        fontService.registerSystemFonts();
+        PrintWriter out = spec.commandLine().getOut();
+        
+        out.println("=== Available PDF Fonts ===");
+        fontService.getAvailablePdfFonts().forEach(font -> out.println("  " + font));
+        
+        out.println();
+        out.println("=== Available PNG Fonts ===");
+        fontService.getAvailablePngFonts().forEach(font -> out.println("  " + font));
     }
 
     // Getters for testing
@@ -191,11 +250,11 @@ public class RenderCommand implements Callable<Integer> {
     }
 
     public float getX() {
-        return x;
+        return x != null ? x : 0f;
     }
 
     public float getY() {
-        return y;
+        return y != null ? y : 0f;
     }
 
     public Alignment getAlignment() {
@@ -212,5 +271,17 @@ public class RenderCommand implements Callable<Integer> {
 
     public int getParallelism() {
         return parallelism != null ? parallelism : Runtime.getRuntime().availableProcessors();
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public String getPostfix() {
+        return postfix;
+    }
+
+    public boolean isListFonts() {
+        return listFonts;
     }
 }

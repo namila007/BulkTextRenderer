@@ -98,3 +98,16 @@ User defines:
 5. Output files are generated in parallel
 6. User can view the current progress of output creation as a progress bar (0-100%)
 
+
+
+----
+new requirements phase 5.1
+1. application able to register os fonts https://librepdf.github.io/OpenPDF/docs-1-2-7/com/lowagie/text/FontFactory.html for pdf, for png use relavant java inbuild? libraries, use context7 for explore and user can provide font exact name, then this custom font is used for text generation
+
+2. user and give -prifix and -postfix for the output file name, by default  text from each(snake case max 15 chars) .so final name will be <prefix>-<base-template-name>-<csv_text_first_part>-<postfix>.<format>
+default of pre and posfix will be null. show default available fontlist on picocli help
+
+
+
+
+

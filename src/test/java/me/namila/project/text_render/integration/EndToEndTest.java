@@ -28,6 +28,7 @@ class EndToEndTest {
 
     private static final Path TEMPLATE_PDF = Path.of("src/test/resources/template.pdf");
     private static final Path TEMPLATE_PNG = Path.of("src/test/resources/template.png");
+    private static final Path TEMPLATE_JPEG = Path.of("src/test/resources/template.jpg");
     private static final Path SAMPLE_CSV = Path.of("src/test/resources/sample.csv");
     private static final Path SINGLE_LINE_CSV = Path.of("src/test/resources/single-line.csv");
 
@@ -44,6 +45,7 @@ class EndToEndTest {
         // Generate test templates if they don't exist
         TestResourceGenerator.ensureTemplatePdfExists(TEMPLATE_PDF);
         TestResourceGenerator.ensureTemplatePngExists(TEMPLATE_PNG);
+        TestResourceGenerator.ensureTemplateJpegExists(TEMPLATE_JPEG);
     }
 
     @BeforeEach
@@ -109,6 +111,30 @@ class EndToEndTest {
         assertThat(outputDir).exists();
         
         File[] files = outputDir.toFile().listFiles((dir, name) -> name.endsWith(".png"));
+        assertThat(files).isNotNull();
+        assertThat(files.length).isEqualTo(10); // 10 names in sample.csv
+    }
+
+    @Test
+    @DisplayName("Should generate JPEGs from CSV using JPEG template")
+    void shouldGenerateJpegsFromCsvUsingJpegTemplate() {
+        // Given
+        Path outputDir = tempDir.resolve("jpeg-output");
+
+        // When
+        int exitCode = cmd.execute(
+            "-t", TEMPLATE_JPEG.toString(),
+            "-c", SAMPLE_CSV.toString(),
+            "-o", outputDir.toString(),
+            "--x", "100",
+            "--y", "100"
+        );
+
+        // Then
+        assertThat(exitCode).isZero();
+        assertThat(outputDir).exists();
+        
+        File[] files = outputDir.toFile().listFiles((dir, name) -> name.endsWith(".jpg"));
         assertThat(files).isNotNull();
         assertThat(files.length).isEqualTo(10); // 10 names in sample.csv
     }

@@ -3,6 +3,7 @@ package me.namila.project.text_render.cli;
 import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.service.CsvReaderService;
 import me.namila.project.text_render.service.FontService;
+import me.namila.project.text_render.service.JpegRendererService;
 import me.namila.project.text_render.service.ParallelExecutorService;
 import me.namila.project.text_render.service.PdfRendererService;
 import me.namila.project.text_render.service.PngRendererService;
@@ -35,6 +36,7 @@ class RenderCommandTest {
             new CsvReaderService(),
             new PdfRendererService(),
             new PngRendererService(),
+            new JpegRendererService(),
             new ParallelExecutorService(),
             new FontService()
         );
@@ -308,6 +310,61 @@ class RenderCommandTest {
         // Then
         assertThat(command.getPrefix()).isNull();
         assertThat(command.getPostfix()).isNull();
+    }
+
+    @Test
+    void shouldRejectUnsupportedTemplateFormat() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.bmp", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+
+        // When
+        int exitCode = commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "--x", "100",
+            "--y", "200"
+        );
+
+        // Then
+        assertThat(exitCode).isNotEqualTo(0);
+        assertThat(stderr.toString()).contains("Unsupported template format");
+    }
+
+    @Test
+    void shouldAcceptJpgTemplateFormat() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.jpg", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+
+        // When - just checking that validation passes (file needs to exist with valid JPEG content for full test)
+        int exitCode = commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "--x", "100",
+            "--y", "200"
+        );
+
+        // Then - validation of format passes, may fail later due to invalid image content
+        assertThat(stderr.toString()).doesNotContain("Unsupported template format");
+    }
+
+    @Test
+    void shouldAcceptJpegTemplateFormat() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.jpeg", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+
+        // When - just checking that validation passes
+        int exitCode = commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "--x", "100",
+            "--y", "200"
+        );
+
+        // Then - validation of format passes
+        assertThat(stderr.toString()).doesNotContain("Unsupported template format");
     }
 
     private Path createTempFile(String name, String content) throws IOException {

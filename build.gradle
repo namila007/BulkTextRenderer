@@ -31,6 +31,10 @@ dependencies {
     // OpenPDF for PDF manipulation
     implementation 'com.github.librepdf:openpdf:2.0.3'
     
+    // SLF4J Logging
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'org.slf4j:slf4j-simple:2.0.16'
+    
     // Testing
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'

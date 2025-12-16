@@ -11,6 +11,8 @@ import me.namila.project.text_render.service.PngRendererService;
 import me.namila.project.text_render.service.RendererService;
 import me.namila.project.text_render.util.OutputFileNameGenerator;
 import me.namila.project.text_render.util.ProgressTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -31,6 +33,8 @@ import java.util.concurrent.Callable;
     description = "Bulk render text onto PDF or PNG templates using data from a CSV file."
 )
 public class RenderCommand implements Callable<Integer> {
+
+    private static final Logger logger = LoggerFactory.getLogger(RenderCommand.class);
 
     private final CsvReaderService csvReaderService;
     private final PdfRendererService pdfRendererService;
@@ -89,6 +93,14 @@ public class RenderCommand implements Callable<Integer> {
             description = "List available fonts for PDF and PNG rendering and exit")
     private boolean listFonts;
 
+    @Option(names = {"-v", "--verbose"}, 
+            description = "Enable verbose logging (INFO level)")
+    private boolean verbose;
+
+    @Option(names = {"--debug"}, 
+            description = "Enable debug logging (DEBUG level)")
+    private boolean debug;
+
     public RenderCommand(CsvReaderService csvReaderService,
                         PdfRendererService pdfRendererService,
                         PngRendererService pngRendererService,
@@ -104,6 +116,9 @@ public class RenderCommand implements Callable<Integer> {
     @Override
     public Integer call() {
         try {
+            // Configure log level based on CLI options
+            configureLogLevel();
+            
             // Handle --list-fonts option
             if (listFonts) {
                 listAvailableFonts();
@@ -122,16 +137,19 @@ public class RenderCommand implements Callable<Integer> {
 
             // Create output directory if it doesn't exist
             Files.createDirectories(outputFolder);
+            logger.debug("Output directory created/verified: {}", outputFolder.toAbsolutePath());
 
             // Read CSV lines
             List<String> lines = csvReaderService.readLines(csvPath);
             if (lines.isEmpty()) {
-                System.out.println("No entries found in CSV file.");
+                logger.warn("No entries found in CSV file.");
+                spec.commandLine().getOut().println("No entries found in CSV file.");
                 return 0;
             }
 
             // Determine renderer based on template extension
             RendererService renderer = selectRenderer();
+            logger.debug("Selected renderer: {}", renderer.getClass().getSimpleName());
 
             // Build render jobs
             TextConfig textConfig = new TextConfig(x, y, alignment, fontName, fontSize);
@@ -141,18 +159,34 @@ public class RenderCommand implements Callable<Integer> {
                 .toList();
 
             // Execute jobs in parallel
-            System.out.printf("Processing %d entries with %d threads...%n", 
+            logger.info("Processing {} entries with {} threads", jobs.size(), getParallelism());
+            spec.commandLine().getOut().printf("Processing %d entries with %d threads...%n", 
                              jobs.size(), getParallelism());
             
             ProgressTracker tracker = new ProgressTracker(jobs.size());
             parallelExecutorService.executeAll(jobs, renderer, getParallelism(), tracker);
 
-            System.out.printf("Completed! Output files saved to: %s%n", outputFolder.toAbsolutePath());
+            logger.info("Completed! Output saved to: {}", outputFolder.toAbsolutePath());
+            spec.commandLine().getOut().printf("Completed! Output files saved to: %s%n", outputFolder.toAbsolutePath());
             return 0;
 
         } catch (Exception e) {
-            System.err.printf("Error: %s%n", e.getMessage());
+            logger.error("Error during rendering: {}", e.getMessage(), e);
+            spec.commandLine().getErr().printf("Error: %s%n", e.getMessage());
             return 1;
+        }
+    }
+
+    /**
+     * Configures the SLF4J Simple Logger log level based on CLI options.
+     */
+    private void configureLogLevel() {
+        if (debug) {
+            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
+            logger.debug("Debug logging enabled");
+        } else if (verbose) {
+            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
+            logger.info("Verbose logging enabled");
         }
     }
 

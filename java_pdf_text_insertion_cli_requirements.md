@@ -108,6 +108,17 @@ new requirements phase 5.1
 default of pre and posfix will be null. show default available fontlist on picocli help
 
 
+---
+new requiremet
+
+1. <prefix>-<base-template-name>-<csv_text_first_part(max 15chars)>-<postfix>.<format>  so new csv text can contain max 20chars. remove trim text . name can be trim by max 20 chars, spaces joined by '_', remo nonalpha, mr.mrs,miss name prefixes etc
+2. pdf position should start from top left same as png
+3. for --list-fonts  show system fonts supported and default fonts supported by pdf library. so no need to ouput fonts for different file types.
+4. currently support pixel, new measuement need to be added - milimeter (mm) , user can define this wheter px or mm using arg. default is px.
+5. user slf4 logger for logs, default is warn, add info,debugs log and remyve system out. use correct log template for cli app
+6. add support for .jpeg/jpg files input and output, position start from top left 0,0
+7. (optional get this last,)user can define type of outpute file. if user give .pdf as template he can define custom output type .jpg/.png/pdf etc. default typeis same as input type. so there must be a convertion need to be done from type to type.
+
 
 
 

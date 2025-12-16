@@ -1,6 +1,8 @@
 package me.namila.project.text_render.service;
 
 import com.lowagie.text.FontFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.awt.GraphicsEnvironment;
@@ -14,12 +16,16 @@ import java.util.TreeSet;
 @Service
 public class FontService {
 
+    private static final Logger logger = LoggerFactory.getLogger(FontService.class);
+
     /**
      * Registers system fonts for PDF rendering.
      * This scans common system font directories and makes fonts available for PDF generation.
      */
     public void registerSystemFonts() {
+        logger.info("Registering system fonts for PDF rendering...");
         FontFactory.registerDirectories();
+        logger.debug("System fonts registered. Total registered: {}", FontFactory.getRegisteredFonts().size());
     }
 
     /**

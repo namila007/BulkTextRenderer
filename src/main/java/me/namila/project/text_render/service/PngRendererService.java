@@ -3,6 +3,8 @@ package me.namila.project.text_render.service;
 import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -12,8 +14,12 @@ import java.awt.image.BufferedImage;
 @Service
 public class PngRendererService implements RendererService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PngRendererService.class);
+
     @Override
     public void render(RenderJob job) throws Exception {
+        logger.debug("Rendering PNG for text: '{}' at ({}, {})", job.text(), job.textConfig().x(), job.textConfig().y());
+        
         BufferedImage image = ImageIO.read(job.templatePath().toFile());
         Graphics2D g2d = image.createGraphics();
 
@@ -27,11 +33,15 @@ public class PngRendererService implements RendererService {
 
             int adjustedX = calculateAlignedX(g2d, job.text(), config.x(), config.alignment());
             g2d.drawString(job.text(), adjustedX, (int) config.y());
+            
+            logger.debug("Text rendered with font: {}, size: {}, alignment: {}", 
+                config.fontName(), config.fontSize(), config.alignment());
         } finally {
             g2d.dispose();
         }
 
         ImageIO.write(image, "PNG", job.outputPath().toFile());
+        logger.debug("Successfully rendered PNG to: {}", job.outputPath());
     }
 
     private void configureRenderingQuality(Graphics2D g2d) {

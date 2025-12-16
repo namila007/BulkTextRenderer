@@ -2,6 +2,8 @@ package me.namila.project.text_render.service;
 
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.util.ProgressTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ParallelExecutorService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ParallelExecutorService.class);
     private static final long DEFAULT_TIMEOUT_MINUTES = 60;
 
     /**
@@ -30,9 +33,11 @@ public class ParallelExecutorService {
     public void executeAll(List<RenderJob> jobs, RendererService renderer, 
                           int maxParallelism, ProgressTracker progressTracker) {
         if (jobs.isEmpty()) {
+            logger.debug("No jobs to execute, returning");
             return;
         }
 
+        logger.info("Starting parallel execution of {} jobs with {} threads", jobs.size(), maxParallelism);
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         Semaphore semaphore = new Semaphore(maxParallelism);
 
@@ -44,6 +49,7 @@ public class ParallelExecutorService {
             executor.shutdown();
             awaitCompletion(executor);
         }
+        logger.info("All jobs completed");
     }
 
     private void executeJob(RenderJob job, RendererService renderer, 
@@ -51,16 +57,18 @@ public class ParallelExecutorService {
         try {
             semaphore.acquire();
             try {
+                logger.debug("Rendering job for text: {}", job.text());
                 renderer.render(job);
                 progressTracker.increment();
+                logger.debug("Successfully rendered job for text: {}", job.text());
             } finally {
                 semaphore.release();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.printf("Job interrupted for: %s%n", job.text());
+            logger.error("Job interrupted for: {}", job.text());
         } catch (Exception e) {
-            System.err.printf("Failed to render job for '%s': %s%n", job.text(), e.getMessage());
+            logger.error("Failed to render job for '{}': {}", job.text(), e.getMessage());
         }
     }
 
@@ -68,7 +76,7 @@ public class ParallelExecutorService {
         try {
             boolean completed = executor.awaitTermination(DEFAULT_TIMEOUT_MINUTES, TimeUnit.MINUTES);
             if (!completed) {
-                System.err.println("Warning: Some tasks did not complete within the timeout period");
+                logger.warn("Some tasks did not complete within the timeout period");
                 executor.shutdownNow();
             }
         } catch (InterruptedException e) {

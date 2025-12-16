@@ -7,6 +7,8 @@ import com.lowagie.text.pdf.PdfStamper;
 import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -14,8 +16,12 @@ import java.io.FileOutputStream;
 @Service
 public class PdfRendererService implements RendererService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PdfRendererService.class);
+
     @Override
     public void render(RenderJob job) throws Exception {
+        logger.debug("Rendering PDF for text: '{}' at ({}, {})", job.text(), job.textConfig().x(), job.textConfig().y());
+        
         PdfReader reader = new PdfReader(job.templatePath().toString());
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(job.outputPath().toFile()));
 
@@ -31,6 +37,8 @@ public class PdfRendererService implements RendererService {
             canvas.beginText();
             canvas.showTextAligned(alignment, job.text(), config.x(), config.y(), 0);
             canvas.endText();
+            
+            logger.debug("Successfully rendered PDF to: {}", job.outputPath());
         } finally {
             stamper.close();
             reader.close();

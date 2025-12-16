@@ -1,6 +1,7 @@
 package me.namila.project.text_render.cli;
 
 import me.namila.project.text_render.model.Alignment;
+import me.namila.project.text_render.model.MeasurementUnit;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
 import me.namila.project.text_render.service.CsvReaderService;
@@ -64,6 +65,12 @@ public class RenderCommand implements Callable<Integer> {
     @Option(names = {"--y"}, 
             description = "Y coordinate for text placement")
     private Float y;
+
+    @Option(names = {"-u", "--unit"}, 
+            defaultValue = "PX",
+            converter = MeasurementUnitConverter.class,
+            description = "Measurement unit for coordinates: PX (pixels), MM (millimeters). Default: ${DEFAULT-VALUE}")
+    private MeasurementUnit unit;
 
     @Option(names = {"-a", "--align"}, defaultValue = "LEFT", 
             description = "Text alignment: LEFT, CENTER, RIGHT (default: ${DEFAULT-VALUE})")
@@ -151,8 +158,13 @@ public class RenderCommand implements Callable<Integer> {
             RendererService renderer = selectRenderer();
             logger.debug("Selected renderer: {}", renderer.getClass().getSimpleName());
 
+            // Convert coordinates from specified unit to pixels
+            float xPixels = unit.toPixels(x);
+            float yPixels = unit.toPixels(y);
+            logger.debug("Coordinates converted: ({}, {}) {} -> ({}, {}) px", x, y, unit, xPixels, yPixels);
+
             // Build render jobs
-            TextConfig textConfig = new TextConfig(x, y, alignment, fontName, fontSize);
+            TextConfig textConfig = new TextConfig(xPixels, yPixels, alignment, fontName, fontSize);
             String extension = getFileExtension(templatePath);
             List<RenderJob> jobs = lines.stream()
                 .map(text -> createRenderJob(text, textConfig, extension))

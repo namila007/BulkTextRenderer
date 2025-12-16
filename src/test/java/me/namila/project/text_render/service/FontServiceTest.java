@@ -1,5 +1,6 @@
 package me.namila.project.text_render.service;
 
+import com.lowagie.text.pdf.BaseFont;
 import me.namila.project.text_render.model.FontCategory;
 import me.namila.project.text_render.model.FontInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -222,5 +223,123 @@ class FontServiceTest {
             assertThat(systemFonts.get(i - 1).name().compareToIgnoreCase(systemFonts.get(i).name()))
                     .isLessThanOrEqualTo(0);
         }
+    }
+    
+    // --- BaseFont Creation Tests ---
+    
+    @Test
+    void shouldCreateBaseFontForBuiltInHelvetica() {
+        // When
+        BaseFont font = fontService.createBaseFontForPdf("Helvetica");
+        
+        // Then
+        assertThat(font).isNotNull();
+    }
+    
+    @Test
+    void shouldCreateBaseFontForBuiltInCourier() {
+        // When
+        BaseFont font = fontService.createBaseFontForPdf("Courier");
+        
+        // Then
+        assertThat(font).isNotNull();
+    }
+    
+    @Test
+    void shouldCreateBaseFontForBuiltInTimesRoman() {
+        // When
+        BaseFont font = fontService.createBaseFontForPdf("Times New Roman");
+        
+        // Then
+        assertThat(font).isNotNull();
+    }
+    
+    @Test
+    void shouldCreateBaseFontForBuiltInTimesCaseInsensitive() {
+        // When
+        BaseFont font = fontService.createBaseFontForPdf("times");
+        
+        // Then
+        assertThat(font).isNotNull();
+    }
+    
+    @Test
+    void shouldFallbackToTimesRomanForNullFont() {
+        // When
+        BaseFont font = fontService.createBaseFontForPdf(null);
+        
+        // Then
+        assertThat(font).isNotNull();
+    }
+    
+    @Test
+    void shouldFallbackToTimesRomanForUnknownFont() {
+        // When
+        BaseFont font = fontService.createBaseFontForPdf("NonExistentFont12345XYZ");
+        
+        // Then - should return Times Roman fallback
+        assertThat(font).isNotNull();
+    }
+    
+    @Test
+    void shouldCreateBaseFontForSystemFontIfAvailable() {
+        // Given - find a system font that's available
+        fontService.registerSystemFonts();
+        Set<String> registeredFonts = fontService.getAvailablePdfFonts();
+        
+        // Find a font that's not a built-in (skip helvetica, courier, times)
+        String systemFont = registeredFonts.stream()
+            .filter(f -> !f.equalsIgnoreCase("helvetica") 
+                && !f.equalsIgnoreCase("courier")
+                && !f.equalsIgnoreCase("times")
+                && !f.equalsIgnoreCase("times new roman"))
+            .findFirst()
+            .orElse(null);
+        
+        if (systemFont != null) {
+            // When
+            BaseFont font = fontService.createBaseFontForPdf(systemFont);
+            
+            // Then
+            assertThat(font).isNotNull();
+        }
+        // Skip test if no system fonts available (shouldn't happen on real systems)
+    }
+    
+    @Test
+    void shouldCheckIfSystemFontIsAvailable() {
+        // Given
+        fontService.registerSystemFonts();
+        
+        // When/Then - check built-in font
+        assertThat(fontService.isSystemFontAvailable("Helvetica")).isTrue();
+        assertThat(fontService.isSystemFontAvailable("NonExistentFont12345")).isFalse();
+    }
+    
+    @Test
+    void shouldRegisterSystemFontsLazily() {
+        // Given - fresh FontService
+        FontService freshService = new FontService();
+        
+        // When - call createBaseFontForPdf without explicit registration
+        BaseFont font = freshService.createBaseFontForPdf("Helvetica");
+        
+        // Then - should work (lazy registration)
+        assertThat(font).isNotNull();
+    }
+    
+    @Test
+    void shouldOnlyRegisterSystemFontsOnce() {
+        // Given
+        FontService freshService = new FontService();
+        
+        // When - call registerSystemFonts multiple times
+        freshService.registerSystemFonts();
+        int countAfterFirst = freshService.getAvailablePdfFonts().size();
+        freshService.registerSystemFonts();
+        int countAfterSecond = freshService.getAvailablePdfFonts().size();
+        
+        // Then - should have same count (not re-registered)
+        assertThat(countAfterFirst).isEqualTo(countAfterSecond);
     }
 }

@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -128,8 +129,14 @@ public class RenderCommand implements Callable<Integer> {
     @Override
     public Integer call() {
         try {
-            // Configure log level based on CLI options
-            configureLogLevel();
+            // Log startup message if verbose/debug enabled
+            // Note: Actual log level configuration is done in BulkTextRendererApp.main()
+            // before Spring context initialization
+            if (debug) {
+                logger.debug("Debug logging enabled");
+            } else if (verbose) {
+                logger.info("Verbose logging enabled");
+            }
             
             // Handle --list-fonts option
             if (listFonts) {
@@ -191,19 +198,6 @@ public class RenderCommand implements Callable<Integer> {
             logger.error("Error during rendering: {}", e.getMessage(), e);
             spec.commandLine().getErr().printf("Error: %s%n", e.getMessage());
             return 1;
-        }
-    }
-
-    /**
-     * Configures the SLF4J Simple Logger log level based on CLI options.
-     */
-    private void configureLogLevel() {
-        if (debug) {
-            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
-            logger.debug("Debug logging enabled");
-        } else if (verbose) {
-            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
-            logger.info("Verbose logging enabled");
         }
     }
 
@@ -288,20 +282,30 @@ public class RenderCommand implements Callable<Integer> {
         out.println();
         
         var fonts = fontService.getUnifiedAvailableFonts();
-        me.namila.project.text_render.model.FontCategory currentCategory = null;
+        Set<String> pdfRegistered = fontService.getAvailablePdfFonts();
         
-        for (var font : fonts) {
-            if (font.category() != currentCategory) {
-                currentCategory = font.category();
-                if (currentCategory == me.namila.project.text_render.model.FontCategory.BUILT_IN) {
-                    out.println("[Built-in]");
-                } else {
-                    out.println();
-                    out.println("[System]");
-                }
-            }
-            out.println("  " + font.name());
-        }
+        // Built-in fonts (work for all formats)
+        out.println("[Built-in - PDF, PNG, JPEG]");
+        fonts.stream()
+            .filter(f -> f.category() == me.namila.project.text_render.model.FontCategory.BUILT_IN)
+            .forEach(f -> out.println("  " + f.name()));
+        
+        // PDF-registered system fonts
+        out.println();
+        out.println("[System Fonts - PDF, PNG, JPEG]");
+        fonts.stream()
+            .filter(f -> f.category() == me.namila.project.text_render.model.FontCategory.SYSTEM)
+            .filter(f -> pdfRegistered.stream().anyMatch(p -> p.equalsIgnoreCase(f.name())))
+            .forEach(f -> out.println("  " + f.name()));
+        
+        // PNG/JPEG-only fonts
+        out.println();
+        out.println("[System Fonts - PNG, JPEG only]");
+        out.println("(These fonts are not registered for PDF embedding and will fall back to Times Roman)");
+        fonts.stream()
+            .filter(f -> f.category() == me.namila.project.text_render.model.FontCategory.SYSTEM)
+            .filter(f -> pdfRegistered.stream().noneMatch(p -> p.equalsIgnoreCase(f.name())))
+            .forEach(f -> out.println("  " + f.name()));
     }
 
     // Getters for testing

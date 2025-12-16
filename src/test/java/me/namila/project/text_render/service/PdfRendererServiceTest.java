@@ -20,7 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PdfRendererServiceTest {
 
     private static Path templatePdf;
-    private final PdfRendererService pdfRendererService = new PdfRendererService();
+    private final FontService fontService = new FontService();
+    private final PdfRendererService pdfRendererService = new PdfRendererService(fontService);
 
     @TempDir
     Path tempDir;

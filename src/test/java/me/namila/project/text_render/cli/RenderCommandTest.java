@@ -32,13 +32,14 @@ class RenderCommandTest {
 
     @BeforeEach
     void setUp() {
+        FontService fontService = new FontService();
         command = new RenderCommand(
             new CsvReaderService(),
-            new PdfRendererService(),
+            new PdfRendererService(fontService),
             new PngRendererService(),
             new JpegRendererService(),
             new ParallelExecutorService(),
-            new FontService()
+            fontService
         );
         commandLine = new CommandLine(command);
         stdout = new StringWriter();
@@ -289,8 +290,9 @@ class RenderCommandTest {
         // Then
         assertThat(exitCode).isEqualTo(0);
         assertThat(stdout.toString()).contains("=== Available Fonts ===");
-        assertThat(stdout.toString()).contains("[Built-in]");
-        assertThat(stdout.toString()).contains("[System]");
+        assertThat(stdout.toString()).contains("[Built-in - PDF, PNG, JPEG]");
+        assertThat(stdout.toString()).contains("[System Fonts - PDF, PNG, JPEG]");
+        assertThat(stdout.toString()).contains("[System Fonts - PNG, JPEG only]");
     }
 
     @Test

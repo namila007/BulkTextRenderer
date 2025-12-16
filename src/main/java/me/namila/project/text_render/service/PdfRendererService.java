@@ -22,11 +22,23 @@ import java.io.FileOutputStream;
  * User-provided Y coordinates are automatically transformed from top-left to PDF's
  * native bottom-left coordinate system.
  * </p>
+ * 
+ * <p>Font Support:
+ * Supports both built-in PDF fonts (Helvetica, Courier, Times Roman) and system fonts.
+ * System fonts are automatically discovered and registered. If a requested font is not
+ * available, falls back to Times Roman.
+ * </p>
  */
 @Service
 public class PdfRendererService implements RendererService {
 
     private static final Logger logger = LoggerFactory.getLogger(PdfRendererService.class);
+    
+    private final FontService fontService;
+    
+    public PdfRendererService(FontService fontService) {
+        this.fontService = fontService;
+    }
 
     @Override
     public void render(RenderJob job) throws Exception {
@@ -48,8 +60,10 @@ public class PdfRendererService implements RendererService {
             float transformedY = pageHeight - config.y();
             logger.debug("Transformed Y coordinate: {} -> {} (page height: {})", config.y(), transformedY, pageHeight);
 
-            BaseFont baseFont = createBaseFont(config.fontName());
+            // Use FontService to create font with system font support
+            BaseFont baseFont = fontService.createBaseFontForPdf(config.fontName());
             canvas.setFontAndSize(baseFont, config.fontSize());
+            logger.debug("Using font: {} at size: {}", config.fontName(), config.fontSize());
 
             int alignment = mapAlignment(config.alignment());
 
@@ -62,24 +76,6 @@ public class PdfRendererService implements RendererService {
             stamper.close();
             reader.close();
         }
-    }
-
-    private BaseFont createBaseFont(String fontName) throws Exception {
-        String baseFontName = mapToBaseFontName(fontName);
-        return BaseFont.createFont(baseFontName, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-    }
-
-    private String mapToBaseFontName(String fontName) {
-        if (fontName == null) {
-            return BaseFont.TIMES_ROMAN;
-        }
-
-        return switch (fontName.toLowerCase()) {
-            case "helvetica" -> BaseFont.HELVETICA;
-            case "courier" -> BaseFont.COURIER;
-            case "times new roman", "times" -> BaseFont.TIMES_ROMAN;
-            default -> BaseFont.TIMES_ROMAN;
-        };
     }
 
     private int mapAlignment(Alignment alignment) {

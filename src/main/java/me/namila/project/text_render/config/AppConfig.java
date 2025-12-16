@@ -22,8 +22,8 @@ public class AppConfig {
     }
 
     @Bean
-    public PdfRendererService pdfRendererService() {
-        return new PdfRendererService();
+    public PdfRendererService pdfRendererService(FontService fontService) {
+        return new PdfRendererService(fontService);
     }
 
     @Bean

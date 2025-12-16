@@ -200,8 +200,9 @@ class EndToEndTest {
         assertThat(exitCode).isZero();
         String output = stdout.toString();
         assertThat(output).contains("=== Available Fonts ===");
-        assertThat(output).contains("[Built-in]");
-        assertThat(output).contains("[System]");
+        assertThat(output).contains("[Built-in - PDF, PNG, JPEG]");
+        assertThat(output).contains("[System Fonts - PDF, PNG, JPEG]");
+        assertThat(output).contains("[System Fonts - PNG, JPEG only]");
     }
 
     @Test

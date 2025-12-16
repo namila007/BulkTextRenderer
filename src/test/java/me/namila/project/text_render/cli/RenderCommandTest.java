@@ -286,8 +286,9 @@ class RenderCommandTest {
 
         // Then
         assertThat(exitCode).isEqualTo(0);
-        assertThat(stdout.toString()).contains("Available PDF Fonts");
-        assertThat(stdout.toString()).contains("Available PNG Fonts");
+        assertThat(stdout.toString()).contains("=== Available Fonts ===");
+        assertThat(stdout.toString()).contains("[Built-in]");
+        assertThat(stdout.toString()).contains("[System]");
     }
 
     @Test

@@ -1,8 +1,11 @@
 package me.namila.project.text_render.service;
 
+import me.namila.project.text_render.model.FontCategory;
+import me.namila.project.text_render.model.FontInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -121,5 +124,103 @@ class FontServiceTest {
         assertThat(upperResult).isTrue();
         assertThat(lowerResult).isTrue();
         assertThat(mixedResult).isTrue();
+    }
+
+    // --- Unified Font Listing Tests ---
+
+    @Test
+    void shouldReturnUnifiedFontListContainingBuiltInFonts() {
+        // Given
+        fontService.registerSystemFonts();
+
+        // When
+        List<FontInfo> unifiedFonts = fontService.getUnifiedAvailableFonts();
+
+        // Then - should contain built-in fonts
+        assertThat(unifiedFonts).isNotEmpty();
+        assertThat(unifiedFonts)
+                .anyMatch(font -> font.name().equals("Helvetica") && font.category() == FontCategory.BUILT_IN);
+        assertThat(unifiedFonts)
+                .anyMatch(font -> font.name().equals("Courier") && font.category() == FontCategory.BUILT_IN);
+        assertThat(unifiedFonts)
+                .anyMatch(font -> font.name().equals("Times New Roman") && font.category() == FontCategory.BUILT_IN);
+    }
+
+    @Test
+    void shouldReturnUnifiedFontListContainingSystemFonts() {
+        // Given
+        fontService.registerSystemFonts();
+
+        // When
+        List<FontInfo> unifiedFonts = fontService.getUnifiedAvailableFonts();
+
+        // Then - should contain system fonts
+        assertThat(unifiedFonts)
+                .anyMatch(font -> font.category() == FontCategory.SYSTEM);
+    }
+
+    @Test
+    void shouldReturnBuiltInFontsFirstInUnifiedList() {
+        // Given
+        fontService.registerSystemFonts();
+
+        // When
+        List<FontInfo> unifiedFonts = fontService.getUnifiedAvailableFonts();
+
+        // Then - built-in fonts should come before system fonts
+        int lastBuiltInIndex = -1;
+        int firstSystemIndex = Integer.MAX_VALUE;
+        
+        for (int i = 0; i < unifiedFonts.size(); i++) {
+            if (unifiedFonts.get(i).category() == FontCategory.BUILT_IN) {
+                lastBuiltInIndex = i;
+            } else if (unifiedFonts.get(i).category() == FontCategory.SYSTEM && firstSystemIndex == Integer.MAX_VALUE) {
+                firstSystemIndex = i;
+            }
+        }
+        
+        assertThat(lastBuiltInIndex).isLessThan(firstSystemIndex);
+    }
+
+    @Test
+    void shouldNotContainDuplicateFontsInUnifiedList() {
+        // Given
+        fontService.registerSystemFonts();
+
+        // When
+        List<FontInfo> unifiedFonts = fontService.getUnifiedAvailableFonts();
+        List<String> fontNames = unifiedFonts.stream().map(FontInfo::name).toList();
+
+        // Then - no duplicate font names
+        assertThat(fontNames).doesNotHaveDuplicates();
+    }
+
+    @Test
+    void shouldSortFontsAlphabeticallyWithinCategory() {
+        // Given
+        fontService.registerSystemFonts();
+
+        // When
+        List<FontInfo> unifiedFonts = fontService.getUnifiedAvailableFonts();
+
+        // Then - fonts within each category should be sorted alphabetically
+        List<FontInfo> builtInFonts = unifiedFonts.stream()
+                .filter(f -> f.category() == FontCategory.BUILT_IN)
+                .toList();
+        List<FontInfo> systemFonts = unifiedFonts.stream()
+                .filter(f -> f.category() == FontCategory.SYSTEM)
+                .toList();
+
+        // Check built-in fonts are sorted
+        for (int i = 1; i < builtInFonts.size(); i++) {
+            assertThat(builtInFonts.get(i - 1).name().compareToIgnoreCase(builtInFonts.get(i).name()))
+                    .isLessThanOrEqualTo(0);
+        }
+
+        // Check system fonts are sorted
+        for (int i = 1; i < systemFonts.size(); i++) {
+            assertThat(systemFonts.get(i - 1).name().compareToIgnoreCase(systemFonts.get(i).name()))
+                    .isLessThanOrEqualTo(0);
+        }
     }
 }

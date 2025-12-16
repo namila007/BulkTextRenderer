@@ -274,12 +274,24 @@ public class RenderCommand implements Callable<Integer> {
         fontService.registerSystemFonts();
         PrintWriter out = spec.commandLine().getOut();
         
-        out.println("=== Available PDF Fonts ===");
-        fontService.getAvailablePdfFonts().forEach(font -> out.println("  " + font));
-        
+        out.println("=== Available Fonts ===");
         out.println();
-        out.println("=== Available PNG Fonts ===");
-        fontService.getAvailablePngFonts().forEach(font -> out.println("  " + font));
+        
+        var fonts = fontService.getUnifiedAvailableFonts();
+        me.namila.project.text_render.model.FontCategory currentCategory = null;
+        
+        for (var font : fonts) {
+            if (font.category() != currentCategory) {
+                currentCategory = font.category();
+                if (currentCategory == me.namila.project.text_render.model.FontCategory.BUILT_IN) {
+                    out.println("[Built-in]");
+                } else {
+                    out.println();
+                    out.println("[System]");
+                }
+            }
+            out.println("  " + font.name());
+        }
     }
 
     // Getters for testing

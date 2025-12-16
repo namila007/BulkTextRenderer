@@ -6,6 +6,7 @@ import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
 import me.namila.project.text_render.service.CsvReaderService;
 import me.namila.project.text_render.service.FontService;
+import me.namila.project.text_render.service.JpegRendererService;
 import me.namila.project.text_render.service.ParallelExecutorService;
 import me.namila.project.text_render.service.PdfRendererService;
 import me.namila.project.text_render.service.PngRendererService;
@@ -25,13 +26,13 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * CLI command for bulk text rendering on PDF/PNG templates.
+ * CLI command for bulk text rendering on PDF/PNG/JPEG templates.
  */
 @Command(
     name = "bulk-render",
     mixinStandardHelpOptions = true,
     version = "1.0",
-    description = "Bulk render text onto PDF or PNG templates using data from a CSV file."
+    description = "Bulk render text onto PDF, PNG, or JPEG templates using data from a CSV file."
 )
 public class RenderCommand implements Callable<Integer> {
 
@@ -40,6 +41,7 @@ public class RenderCommand implements Callable<Integer> {
     private final CsvReaderService csvReaderService;
     private final PdfRendererService pdfRendererService;
     private final PngRendererService pngRendererService;
+    private final JpegRendererService jpegRendererService;
     private final ParallelExecutorService parallelExecutorService;
     private final FontService fontService;
 
@@ -47,7 +49,7 @@ public class RenderCommand implements Callable<Integer> {
     private CommandLine.Model.CommandSpec spec;
 
     @Option(names = {"-t", "--template"}, 
-            description = "Template file path (PDF or PNG)")
+            description = "Template file path (PDF, PNG, JPG, or JPEG)")
     private Path templatePath;
 
     @Option(names = {"-c", "--csv"}, 
@@ -97,7 +99,7 @@ public class RenderCommand implements Callable<Integer> {
     private String postfix;
 
     @Option(names = {"--list-fonts"}, 
-            description = "List available fonts for PDF and PNG rendering and exit")
+            description = "List available fonts for PDF, PNG, and JPEG rendering and exit")
     private boolean listFonts;
 
     @Option(names = {"-v", "--verbose"}, 
@@ -111,11 +113,13 @@ public class RenderCommand implements Callable<Integer> {
     public RenderCommand(CsvReaderService csvReaderService,
                         PdfRendererService pdfRendererService,
                         PngRendererService pngRendererService,
+                        JpegRendererService jpegRendererService,
                         ParallelExecutorService parallelExecutorService,
                         FontService fontService) {
         this.csvReaderService = csvReaderService;
         this.pdfRendererService = pdfRendererService;
         this.pngRendererService = pngRendererService;
+        this.jpegRendererService = jpegRendererService;
         this.parallelExecutorService = parallelExecutorService;
         this.fontService = fontService;
     }
@@ -240,8 +244,9 @@ public class RenderCommand implements Callable<Integer> {
         }
 
         String extension = getFileExtension(templatePath).toLowerCase();
-        if (!extension.equals("pdf") && !extension.equals("png")) {
-            err.println("Unsupported template format. Use PDF or PNG: " + templatePath);
+        if (!extension.equals("pdf") && !extension.equals("png") && 
+            !extension.equals("jpg") && !extension.equals("jpeg")) {
+            err.println("Unsupported template format. Use PDF, PNG, JPG, or JPEG: " + templatePath);
             return false;
         }
 
@@ -253,6 +258,7 @@ public class RenderCommand implements Callable<Integer> {
         return switch (extension) {
             case "pdf" -> pdfRendererService;
             case "png" -> pngRendererService;
+            case "jpg", "jpeg" -> jpegRendererService;
             default -> throw new IllegalArgumentException("Unsupported format: " + extension);
         };
     }

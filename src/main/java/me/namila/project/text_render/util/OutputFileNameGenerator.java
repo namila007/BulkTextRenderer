@@ -78,6 +78,48 @@ public class OutputFileNameGenerator {
     }
 
     /**
+     * Generates an output filename using a clean name (no prefix stripping needed).
+     * Use this when the name comes from a multi-column CSV where name is already separated.
+     *
+     * @param templatePath path to the template file
+     * @param cleanName    clean name from CSV (no title prefixes)
+     * @param prefix       optional filename prefix (null to skip)
+     * @param postfix      optional filename postfix (null to skip)
+     * @param format       output format (pdf, png, jpg, jpeg)
+     * @return generated filename
+     */
+    public static String generateFromCleanName(String templatePath, String cleanName, String prefix, String postfix, String format) {
+        logger.debug("Generating filename from clean name: '{}' with prefix='{}', postfix='{}'", cleanName, prefix, postfix);
+        
+        StringBuilder sb = new StringBuilder();
+
+        // Add prefix if not null/empty
+        if (prefix != null && !prefix.isBlank()) {
+            sb.append(prefix).append("-");
+        }
+
+        // Add base template name
+        String baseName = extractBaseName(templatePath);
+        sb.append(baseName).append("-");
+
+        // Process clean name (no prefix stripping)
+        String processedText = processCleanName(cleanName);
+        sb.append(processedText);
+
+        // Add postfix if not null/empty
+        if (postfix != null && !postfix.isBlank()) {
+            sb.append("-").append(postfix);
+        }
+
+        // Add format extension
+        sb.append(".").append(format.toLowerCase());
+
+        String result = sb.toString();
+        logger.debug("Generated filename: '{}'", result);
+        return result;
+    }
+
+    /**
      * Processes text for use in filename:
      * 1. Removes name prefixes (Mr., Mrs., etc.)
      * 2. Replaces spaces with underscores
@@ -104,6 +146,44 @@ public class OutputFileNameGenerator {
         processed = processed.replaceAll("[^a-zA-Z0-9_]", "");
         
         // Step 4: Truncate to max length
+        if (processed.length() > MAX_TEXT_LENGTH) {
+            processed = processed.substring(0, MAX_TEXT_LENGTH);
+        }
+        
+        // Handle edge case where all characters were removed
+        if (processed.isEmpty()) {
+            return "unnamed";
+        }
+        
+        return processed;
+    }
+
+    /**
+     * Processes clean name for use in filename (no prefix stripping).
+     * Used when name comes from multi-column CSV where it's already separated from title.
+     * 
+     * Steps:
+     * 1. Replaces spaces with underscores
+     * 2. Removes non-alphanumeric characters (except underscore)
+     * 3. Truncates to max 20 characters
+     *
+     * @param name the clean name
+     * @return processed name suitable for filename
+     */
+    static String processCleanName(String name) {
+        if (name == null || name.isBlank()) {
+            return "unnamed";
+        }
+        
+        String processed = name.trim();
+        
+        // Step 1: Replace spaces with underscores
+        processed = processed.replaceAll("\\s+", "_");
+        
+        // Step 2: Remove non-alphanumeric characters (except underscore)
+        processed = processed.replaceAll("[^a-zA-Z0-9_]", "");
+        
+        // Step 3: Truncate to max length
         if (processed.length() > MAX_TEXT_LENGTH) {
             processed = processed.substring(0, MAX_TEXT_LENGTH);
         }

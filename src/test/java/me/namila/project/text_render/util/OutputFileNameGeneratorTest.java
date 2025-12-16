@@ -390,4 +390,140 @@ class OutputFileNameGeneratorTest {
             assertThat(result).isEqualTo("JohnMichael_OConnor_");
         }
     }
+
+    @Nested
+    @DisplayName("Clean Name Processing Tests (Multi-Column CSV)")
+    class CleanNameProcessingTests {
+
+        @Test
+        void shouldProcessCleanNameWithoutPrefixStripping() {
+            // Given - clean name from multi-column CSV (no Mr., Dr. etc.)
+            String cleanName = "Adam Smith";
+            
+            // When
+            String result = OutputFileNameGenerator.processCleanName(cleanName);
+
+            // Then - spaces to underscores, no prefix stripping
+            assertThat(result).isEqualTo("Adam_Smith");
+        }
+
+        @Test
+        void shouldNotStripMrFromCleanName() {
+            // Given - name that starts with "Mr" as part of actual name
+            String cleanName = "Mrauk U";
+            
+            // When
+            String result = OutputFileNameGenerator.processCleanName(cleanName);
+
+            // Then - should NOT strip "Mr" since it's part of name
+            assertThat(result).isEqualTo("Mrauk_U");
+        }
+
+        @Test
+        void shouldTruncateCleanNameTo20Characters() {
+            // Given
+            String cleanName = "Very Long Name That Exceeds Maximum";
+            
+            // When
+            String result = OutputFileNameGenerator.processCleanName(cleanName);
+
+            // Then
+            assertThat(result).hasSize(20);
+            assertThat(result).isEqualTo("Very_Long_Name_That_");
+        }
+
+        @Test
+        void shouldRemoveNonAlphanumericFromCleanName() {
+            // Given
+            String cleanName = "John@Smith#Jr!";
+            
+            // When
+            String result = OutputFileNameGenerator.processCleanName(cleanName);
+
+            // Then
+            assertThat(result).isEqualTo("JohnSmithJr");
+        }
+
+        @Test
+        void shouldHandleEmptyCleanName() {
+            // When
+            String result = OutputFileNameGenerator.processCleanName("");
+
+            // Then
+            assertThat(result).isEqualTo("unnamed");
+        }
+
+        @Test
+        void shouldHandleNullCleanName() {
+            // When
+            String result = OutputFileNameGenerator.processCleanName(null);
+
+            // Then
+            assertThat(result).isEqualTo("unnamed");
+        }
+    }
+
+    @Nested
+    @DisplayName("Generate From Clean Name Tests")
+    class GenerateFromCleanNameTests {
+
+        @Test
+        void shouldGenerateFilenameFromCleanNameWithPrefixPostfix() {
+            // Given
+            String templatePath = "/path/to/template.pdf";
+            String cleanName = "Adam Smith";
+            String prefix = "wedding";
+            String postfix = "final";
+            String format = "pdf";
+
+            // When
+            String result = OutputFileNameGenerator.generateFromCleanName(templatePath, cleanName, prefix, postfix, format);
+
+            // Then
+            assertThat(result).isEqualTo("wedding-template-Adam_Smith-final.pdf");
+        }
+
+        @Test
+        void shouldGenerateFilenameFromCleanNameWithoutPrefixPostfix() {
+            // Given
+            String templatePath = "invitation.png";
+            String cleanName = "Jane Doe";
+            String format = "png";
+
+            // When
+            String result = OutputFileNameGenerator.generateFromCleanName(templatePath, cleanName, null, null, format);
+
+            // Then
+            assertThat(result).isEqualTo("invitation-Jane_Doe.png");
+        }
+
+        @Test
+        void shouldNotStripMrPrefixWhenUsingCleanNameGenerator() {
+            // Given - using legacy generate() would strip "Mr."
+            // But generateFromCleanName() should NOT strip it
+            String templatePath = "template.pdf";
+            String cleanName = "Mrak Johnson"; // Name that happens to start with "Mr"
+            String format = "pdf";
+
+            // When
+            String result = OutputFileNameGenerator.generateFromCleanName(templatePath, cleanName, null, null, format);
+
+            // Then - "Mr" is preserved since it's part of the actual name
+            assertThat(result).isEqualTo("template-Mrak_Johnson.pdf");
+        }
+
+        @Test
+        void shouldGenerateFilenameForJpegFormat() {
+            // Given
+            String templatePath = "photo.jpg";
+            String cleanName = "John Williams";
+            String format = "jpg";
+
+            // When
+            String result = OutputFileNameGenerator.generateFromCleanName(templatePath, cleanName, null, "edited", format);
+
+            // Then
+            assertThat(result).isEqualTo("photo-John_Williams-edited.jpg");
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package me.namila.project.text_render.cli;
 
 import me.namila.project.text_render.model.Alignment;
+import me.namila.project.text_render.model.CsvEntry;
 import me.namila.project.text_render.model.MeasurementUnit;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
@@ -150,9 +151,9 @@ public class RenderCommand implements Callable<Integer> {
             Files.createDirectories(outputFolder);
             logger.debug("Output directory created/verified: {}", outputFolder.toAbsolutePath());
 
-            // Read CSV lines
-            List<String> lines = csvReaderService.readLines(csvPath);
-            if (lines.isEmpty()) {
+            // Read CSV entries (supports multi-column: name,prefix,postfix)
+            List<CsvEntry> entries = csvReaderService.readEntries(csvPath);
+            if (entries.isEmpty()) {
                 logger.warn("No entries found in CSV file.");
                 spec.commandLine().getOut().println("No entries found in CSV file.");
                 return 0;
@@ -170,8 +171,8 @@ public class RenderCommand implements Callable<Integer> {
             // Build render jobs
             TextConfig textConfig = new TextConfig(xPixels, yPixels, alignment, fontName, fontSize);
             String extension = getFileExtension(templatePath);
-            List<RenderJob> jobs = lines.stream()
-                .map(text -> createRenderJob(text, textConfig, extension))
+            List<RenderJob> jobs = entries.stream()
+                .map(entry -> createRenderJob(entry, textConfig, extension))
                 .toList();
 
             // Execute jobs in parallel
@@ -263,11 +264,14 @@ public class RenderCommand implements Callable<Integer> {
         };
     }
 
-    private RenderJob createRenderJob(String text, TextConfig textConfig, String extension) {
-        String outputFilename = OutputFileNameGenerator.generate(
-            templatePath.toString(), text, prefix, postfix, extension);
+    private RenderJob createRenderJob(CsvEntry entry, TextConfig textConfig, String extension) {
+        // Use clean name for filename (no prefix stripping needed)
+        String outputFilename = OutputFileNameGenerator.generateFromCleanName(
+            templatePath.toString(), entry.name(), prefix, postfix, extension);
         Path outputPath = outputFolder.resolve(outputFilename);
-        return new RenderJob(text, textConfig, templatePath, outputPath);
+        // Display text combines prefix + name + postfix
+        String displayText = entry.getDisplayText();
+        return new RenderJob(displayText, textConfig, templatePath, outputPath);
     }
 
     private String getFileExtension(Path path) {

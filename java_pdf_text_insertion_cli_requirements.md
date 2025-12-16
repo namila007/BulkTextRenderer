@@ -120,5 +120,8 @@ new requiremet
 7. (optional get this last,)user can define type of outpute file. if user give .pdf as template he can define custom output type .jpg/.png/pdf etc. default typeis same as input type. so there must be a convertion need to be done from type to type.
 
 
+8. csv file contain two columns; name,prefix,postfix,   so when inserting the text to template <prefix><space><name><space><postfix>, usually postfix/prefix can be empty. if a text is Mr. Adam Smith, csv is in 'Adam Smith,Mr.', so file name we can use name col, and do not need to filter mr.ms.mrs etc.  link ghIsuue #14 for this.
+9. update readme file with current changes. (no need  github issue)
+
 
 

@@ -123,16 +123,24 @@ Emily Davis
 
 ## Coordinate System
 
-### PDF Templates
-- Origin (0,0) is at the **bottom-left** corner
-- Y values increase **upward**
-- X values increase **rightward**
-- For A4 pages: width = 595, height = 842 points
+Both PDF and PNG templates use a **unified coordinate system** with **top-left origin**:
 
-### PNG Templates
 - Origin (0,0) is at the **top-left** corner
 - Y values increase **downward**
 - X values increase **rightward**
+
+### Common Page Dimensions
+
+| Format | Width | Height |
+|--------|-------|--------|
+| A4 PDF | 595 pts | 842 pts |
+| Letter PDF | 612 pts | 792 pts |
+| PNG/JPEG | Varies by image |
+
+**Example**: To place text 100 points from the left and 50 points from the top:
+```bash
+--x 100 --y 50
+```
 
 ## Available Fonts
 

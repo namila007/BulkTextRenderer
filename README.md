@@ -40,7 +40,7 @@ Available as both a JAR (universal compatibility) and native executable (platfor
 Download the latest JAR from [Releases](https://github.com/namila007/BulkTextRenderer/releases):
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar --help
+java -jar BulkTextRenderer-{VERSION}.jar --help
 ```
 
 **Advantages**:
@@ -98,7 +98,7 @@ Download platform-specific native executable from [Releases](https://github.com/
 ./gradlew jar
 ```
 
-The JAR file will be created at: `build/libs/BulkTextRenderer-1.1-SNAPSHOT.jar`
+The JAR file will be created at: `build/libs/BulkTextRenderer-{VERSION}.jar`
 
 ### Build Native Executable
 
@@ -122,7 +122,7 @@ The native executable will be at: `build/native/nativeCompile/BulkTextRenderer`
 ### Basic Usage (JAR)
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
+java -jar BulkTextRenderer-{VERSION}.jar \
   -t template.pdf \
   -c names.csv \
   -o output \
@@ -144,7 +144,7 @@ java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
 ### With All Options
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
+java -jar BulkTextRenderer-{VERSION}.jar \
   -t template.pdf \
   -c names.csv \
   -o output \
@@ -164,13 +164,13 @@ java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
 ### List Available Fonts
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar --list-fonts
+java -jar BulkTextRenderer-{VERSION}.jar --list-fonts
 ```
 
 ### Display Help
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar --help
+java -jar BulkTextRenderer-{VERSION}.jar --help
 ```
 
 ## CLI Options Reference
@@ -282,7 +282,7 @@ Any font installed on your operating system (Arial, Verdana, etc.)
 ### Wedding Invitations (PDF)
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
+java -jar BulkTextRenderer-{VERSION}.jar \
   -t wedding-template.pdf \
   -c guests.csv \
   -o invitations \
@@ -298,7 +298,7 @@ java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
 ### Name Badges (PNG) - JAR Mode
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
+java -jar BulkTextRenderer-{VERSION}.jar \
   -t badge-template.png \
   -c attendees.csv \
   -o badges \
@@ -326,7 +326,7 @@ java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
 ### Large Batch with Custom Threading
 
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar \
+java -jar BulkTextRenderer-{VERSION}.jar \
   -t template.pdf \
   -c large-list.csv \
   -o output \
@@ -368,7 +368,7 @@ Exit codes:
 
 **Solution**: Use the JAR version instead:
 ```bash
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar -t template.png ...
+java -jar BulkTextRenderer-{VERSION}.jar -t template.png ...
 ```
 
 **Explanation**: GraalVM native-image on macOS doesn't bundle AWT native libraries required for PNG/JPEG rendering. See [#28](https://github.com/namila007/BulkTextRenderer/issues/28) for details.
@@ -391,10 +391,10 @@ Enable detailed logging to troubleshoot issues:
 
 ```bash
 # INFO level logging
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar ... --verbose
+java -jar BulkTextRenderer-{VERSION}.jar ... --verbose
 
 # DEBUG level logging (very detailed)
-java -jar BulkTextRenderer-1.1-SNAPSHOT.jar ... --debug
+java -jar BulkTextRenderer-{VERSION}.jar ... --debug
 ```
 
 ## License
@@ -448,4 +448,5 @@ Build with:
 ./gradlew nativeCompile
 ```
 
-See [IMPLEMENTATION_PROGRESS.md](IMPLEMENTATION_PROGRESS.md) Phase 7 for detailed GraalVM documentation.
+## Repo Activity
+![Repository Activity](https://repobeats.axiom.co/api/embed/a986dc92e3b0ed3ff6d42e533fae5710f24e7d18.svg)

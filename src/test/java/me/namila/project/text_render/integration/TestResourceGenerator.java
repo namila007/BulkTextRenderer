@@ -30,7 +30,9 @@ public final class TestResourceGenerator {
      * @throws IOException if an error occurs during file creation
      */
     public static void createTemplatePdf(Path outputPath) throws IOException {
-        Files.createDirectories(outputPath.getParent());
+        if (outputPath.getParent() != null) {
+            Files.createDirectories(outputPath.getParent());
+        }
         
         Document document = new Document(PageSize.A4);
         try {
@@ -52,7 +54,9 @@ public final class TestResourceGenerator {
      * @throws IOException if an error occurs during file creation
      */
     public static void createTemplatePng(Path outputPath, int width, int height) throws IOException {
-        Files.createDirectories(outputPath.getParent());
+        if (outputPath.getParent() != null) {
+            Files.createDirectories(outputPath.getParent());
+        }
         
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
@@ -109,7 +113,9 @@ public final class TestResourceGenerator {
      * @throws IOException if an error occurs during file creation
      */
     public static void createTemplateJpeg(Path outputPath, int width, int height) throws IOException {
-        Files.createDirectories(outputPath.getParent());
+        if (outputPath.getParent() != null) {
+            Files.createDirectories(outputPath.getParent());
+        }
         
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();

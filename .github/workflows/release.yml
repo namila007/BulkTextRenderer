@@ -39,11 +39,10 @@ jobs:
             - name: Set up GraalVM
               uses: graalvm/setup-graalvm@v1
               with:
-                  java-version: "24"
+                  java-version: "24-ea"
                   distribution: "graalvm"
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   native-image-job-reports: "true"
-                  cache: "gradle"
 
             - name: Verify GraalVM installation
               run: |
@@ -173,11 +172,10 @@ jobs:
             - name: Set up GraalVM
               uses: graalvm/setup-graalvm@v1
               with:
-                  java-version: "24"
+                  java-version: "24-ea"
                   distribution: "graalvm"
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   native-image-job-reports: "true"
-                  cache: "gradle"
 
             - name: Verify GraalVM installation
               run: |

@@ -170,8 +170,12 @@ class CsvReaderServiceTest {
     }
 
     private Path getResourcePath(String filename) {
-        return Path.of(Objects.requireNonNull(
-            getClass().getClassLoader().getResource(filename)
-        ).getPath());
+        try {
+            return Path.of(Objects.requireNonNull(
+                getClass().getClassLoader().getResource(filename)
+            ).toURI());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load resource: " + filename, e);
+        }
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.nio.file.Files;
 
 @Service
 public class PngRendererService implements RendererService {
@@ -65,6 +66,11 @@ public class PngRendererService implements RendererService {
                 config.fontName(), config.fontSize(), config.fontStyle(), textColor, config.alignment());
         } finally {
             g2d.dispose();
+        }
+
+        // Ensure parent directory exists
+        if (job.outputPath().getParent() != null) {
+            Files.createDirectories(job.outputPath().getParent());
         }
 
         ImageIO.write(image, "PNG", job.outputPath().toFile());

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.Color;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 
 /**
  * PDF renderer service that inserts text onto PDF templates.
@@ -49,6 +50,11 @@ public class PdfRendererService implements RendererService {
     @Override
     public void render(RenderJob job) throws Exception {
         logger.debug("Rendering PDF for text: '{}' at ({}, {})", job.text(), job.textConfig().x(), job.textConfig().y());
+        
+        // Ensure parent directory exists
+        if (job.outputPath().getParent() != null) {
+            Files.createDirectories(job.outputPath().getParent());
+        }
         
         PdfReader reader = new PdfReader(job.templatePath().toString());
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(job.outputPath().toFile()));

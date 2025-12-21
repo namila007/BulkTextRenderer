@@ -3,6 +3,7 @@ package me.namila.project.text_render.service;
 import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
+import me.namila.project.text_render.util.NativeImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,22 +21,48 @@ public class PngRendererService implements RendererService {
     public void render(RenderJob job) throws Exception {
         logger.debug("Rendering PNG for text: '{}' at ({}, {})", job.text(), job.textConfig().x(), job.textConfig().y());
         
-        BufferedImage image = ImageIO.read(job.templatePath().toFile());
+        BufferedImage image;
+        try {
+            image = ImageIO.read(job.templatePath().toFile());
+        } catch (UnsatisfiedLinkError e) {
+            // Provide a helpful error message for GraalVM native-image AWT issue
+            throw new IllegalStateException(
+                "PNG rendering failed due to missing AWT support. " +
+                "On GraalVM native-image (macOS), AWT native libraries are not bundled. " +
+                "Use 'java -jar' mode for PNG/JPEG rendering. " +
+                "See: https://github.com/oracle/graal/issues/4124", e
+            );
+        }
+        
+        if (image == null) {
+            if (NativeImageUtil.isNativeImage()) {
+                throw new IllegalStateException(
+                    "Failed to read PNG image from " + job.templatePath() + 
+                    ". This may be due to missing AWT support in GraalVM native-image on macOS. " +
+                    "Use 'java -jar' mode for PNG rendering."
+                );
+            }
+            throw new IllegalStateException("Failed to read image from " + job.templatePath());
+        }
+        
         Graphics2D g2d = image.createGraphics();
 
         try {
             configureRenderingQuality(g2d);
 
             TextConfig config = job.textConfig();
-            Font font = createFont(config.fontName(), config.fontSize());
+            Font font = createFont(config.fontName(), config.fontSize(), config.fontStyle().getAwtStyle());
             g2d.setFont(font);
-            g2d.setColor(Color.BLACK);
+            
+            // Apply color from config, default to black if not specified
+            Color textColor = config.color() != null ? config.color() : Color.BLACK;
+            g2d.setColor(textColor);
 
             int adjustedX = calculateAlignedX(g2d, job.text(), config.x(), config.alignment());
             g2d.drawString(job.text(), adjustedX, (int) config.y());
             
-            logger.debug("Text rendered with font: {}, size: {}, alignment: {}", 
-                config.fontName(), config.fontSize(), config.alignment());
+            logger.debug("Text rendered with font: {}, size: {}, style: {}, color: {}, alignment: {}", 
+                config.fontName(), config.fontSize(), config.fontStyle(), textColor, config.alignment());
         } finally {
             g2d.dispose();
         }
@@ -50,9 +77,9 @@ public class PngRendererService implements RendererService {
         g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }
 
-    private Font createFont(String fontName, float fontSize) {
+    private Font createFont(String fontName, float fontSize, int fontStyle) {
         String mappedFontName = mapToSystemFontName(fontName);
-        return new Font(mappedFontName, Font.PLAIN, (int) fontSize);
+        return new Font(mappedFontName, fontStyle, (int) fontSize);
     }
 
     private String mapToSystemFontName(String fontName) {

@@ -1,0 +1,317 @@
+name: Release Executables
+
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Release version (e.g., 1.1.0)"
+                required: true
+                type: string
+            prerelease:
+                description: "Mark as pre-release"
+                required: false
+                type: boolean
+                default: false
+
+permissions:
+    contents: write
+
+jobs:
+    # Delete existing release with same tag if exists
+    cleanup:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Delete existing release
+              uses: dev-drprasad/delete-tag-and-release@v1.1
+              with:
+                  tag_name: v${{ github.event.inputs.version }}
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  delete_release: true
+              continue-on-error: true
+
+    build-linux:
+        needs: cleanup
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+
+            - name: Set up GraalVM
+              uses: graalvm/setup-graalvm@v1
+              with:
+                  java-version: "24"
+                  distribution: "graalvm"
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  native-image-job-reports: "true"
+                  cache: "gradle"
+
+            - name: Verify GraalVM installation
+              run: |
+                  echo "GRAALVM_HOME: $GRAALVM_HOME"
+                  echo "JAVA_HOME: $JAVA_HOME"
+                  java --version
+                  native-image --version
+
+            - name: Grant execute permission for gradlew
+              run: chmod +x gradlew
+
+            - name: Build with Gradle
+              run: ./gradlew build
+
+            - name: Build native executable
+              run: ./gradlew nativeCompile
+
+            - name: Test native executable
+              run: ./build/native/nativeCompile/bulkTextRenderer --help
+
+            - name: Upload Linux artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: bulkTextRenderer-linux-amd64
+                  path: build/native/nativeCompile/bulkTextRenderer
+                  if-no-files-found: error
+
+            - name: Upload JAR artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: bulkTextRenderer-jar
+                  path: build/libs/*.jar
+                  if-no-files-found: error
+
+    #28 - Disabled macOS ARM build due to GitHub Actions macOS runner limitations
+    # use jar file until native-image supports ARM on macOS runners
+
+    # build-macos-intel:
+    #     needs: cleanup
+    #     runs-on: macos-13
+    #     steps:
+    #         - name: Checkout code
+    #           uses: actions/checkout@v5
+
+    #         - name: Set up GraalVM
+    #           uses: graalvm/setup-graalvm@v1
+    #           with:
+    #               java-version: "24"
+    #               distribution: "graalvm"
+    #               github-token: ${{ secrets.GITHUB_TOKEN }}
+    #               native-image-job-reports: "true"
+    #               cache: "gradle"
+
+    #         - name: Verify GraalVM installation
+    #           run: |
+    #               echo "GRAALVM_HOME: $GRAALVM_HOME"
+    #               java --version
+    #               native-image --version
+
+    #         - name: Grant execute permission for gradlew
+    #           run: chmod +x gradlew
+
+    #         - name: Build with Gradle
+    #           run: ./gradlew build
+
+    #         - name: Build native executable
+    #           run: ./gradlew nativeCompile
+
+    #         - name: Test native executable
+    #           run: ./build/native/nativeCompile/bulkTextRenderer --help
+
+    #         - name: Upload macOS Intel artifact
+    #           uses: actions/upload-artifact@v4
+    #           with:
+    #               name: bulkTextRenderer-macos-amd64
+    #               path: build/native/nativeCompile/bulkTextRenderer
+    #               if-no-files-found: error
+
+    #   build-macos-arm:
+    #     needs: cleanup
+    #     runs-on: macos-14
+    #     steps:
+    #       - name: Checkout code
+    #         uses: actions/checkout@v5
+
+    #       - name: Set up GraalVM
+    #         uses: graalvm/setup-graalvm@v1
+    #         with:
+    #           java-version: '24'
+    #           distribution: 'graalvm'
+    #           github-token: ${{ secrets.GITHUB_TOKEN }}
+    #           native-image-job-reports: 'true'
+    #           cache: 'gradle'
+
+    #       - name: Verify GraalVM installation
+    #         run: |
+    #           echo "GRAALVM_HOME: $GRAALVM_HOME"
+    #           java --version
+    #           native-image --version
+
+    #       - name: Grant execute permission for gradlew
+    #         run: chmod +x gradlew
+
+    #       - name: Build with Gradle
+    #         run: ./gradlew build
+
+    #       - name: Build native executable
+    #         run: ./gradlew nativeCompile
+
+    #       - name: Test native executable
+    #         run: ./build/native/nativeCompile/bulkTextRenderer --help
+
+    #       - name: Upload macOS ARM artifact
+    #         uses: actions/upload-artifact@v4
+    #         with:
+    #           name: bulkTextRenderer-macos-arm64
+    #           path: build/native/nativeCompile/bulkTextRenderer
+    #           if-no-files-found: error
+
+    build-windows:
+        needs: cleanup
+        runs-on: windows-2022
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+
+            - name: Set up GraalVM
+              uses: graalvm/setup-graalvm@v1
+              with:
+                  java-version: "24"
+                  distribution: "graalvm"
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  native-image-job-reports: "true"
+                  cache: "gradle"
+
+            - name: Verify GraalVM installation
+              run: |
+                  echo "GRAALVM_HOME: $env:GRAALVM_HOME"
+                  java --version
+                  native-image --version
+
+            - name: Build with Gradle
+              run: ./gradlew build
+
+            - name: Build native executable
+              run: ./gradlew nativeCompile
+
+            - name: Test native executable
+              run: ./build/native/nativeCompile/bulkTextRenderer.exe --help
+
+            - name: Upload Windows artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: bulkTextRenderer-windows-amd64
+                  path: build/native/nativeCompile/bulkTextRenderer.exe
+                  if-no-files-found: error
+
+    release:
+        needs: [build-linux, build-windows]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+
+            - name: Download Linux artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: bulkTextRenderer-linux-amd64
+                  path: release/
+
+            - name: Download JAR artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: bulkTextRenderer-jar
+                  path: release/
+
+            # - name: Download macOS Intel artifact
+            #   uses: actions/download-artifact@v4
+            #   with:
+            #       name: bulkTextRenderer-macos-amd64
+            #       path: release/macos-intel/
+
+            # - name: Download macOS ARM artifact
+            #   uses: actions/download-artifact@v4
+            #   with:
+            #       name: bulkTextRenderer-macos-arm64
+            #       path: release/macos-arm/
+
+            - name: Download Windows artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: bulkTextRenderer-windows-amd64
+                  path: release/
+
+            - name: Prepare release artifacts
+              run: |
+                  cd release
+                  mv bulkTextRenderer bulkTextRenderer-linux-amd64
+                  # mv macos-intel/bulkTextRenderer bulkTextRenderer-macos-amd64
+                  # mv macos-arm/bulkTextRenderer bulkTextRenderer-macos-arm64
+                  mv bulkTextRenderer.exe bulkTextRenderer-windows-amd64.exe
+                  # Rename JAR to include version in filename
+                  mv *.jar bulkTextRenderer-${{ github.event.inputs.version }}.jar
+                  # rm -rf macos-intel macos-arm
+                  chmod +x bulkTextRenderer-linux-amd64
+                  ls -la
+
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: v${{ github.event.inputs.version }}
+                  name: Release v${{ github.event.inputs.version }}
+                  files: release/*
+                  generate_release_notes: true
+                  draft: false
+                  prerelease: ${{ github.event.inputs.prerelease }}
+                  body: |
+                      ## BulkTextRenderer v${{ github.event.inputs.version }}
+
+                      ### Download Options
+
+                      **Universal JAR (Recommended for macOS, or any platform with Java 24+)**
+                      - ✅ Works on all platforms (macOS, Linux, Windows)
+                      - ✅ Full format support (PDF, PNG, JPEG)
+                      - 📦 File: `bulkTextRenderer-${{ github.event.inputs.version }}.jar`
+
+                      **Native Executables (Fast startup, no JRE required)**
+                      - ⚡ Instant startup
+                      - 🚀 Lower memory footprint
+                      - ⚠️ Platform-specific
+
+                      ### Installation
+
+                      #### Option 1: Universal JAR (All Platforms)
+                      ```bash
+                      # Requires Java 24+
+                      java -jar bulkTextRenderer-${{ github.event.inputs.version }}.jar --help
+                      ```
+
+                      **Platform Compatibility:**
+                      - macOS: PDF ✅, PNG ✅, JPEG ✅
+                      - Linux: PDF ✅, PNG ✅, JPEG ✅
+                      - Windows: PDF ✅, PNG ✅, JPEG ✅
+
+                      #### Option 2: Native Executables
+
+                      **Linux (x64)**
+                      ```bash
+                      chmod +x bulkTextRenderer-linux-amd64
+                      ./bulkTextRenderer-linux-amd64 --help
+                      ```
+                      Platform: PDF ✅, PNG ✅, JPEG ✅
+
+                      **Windows (x64)**
+                      ```cmd
+                      bulkTextRenderer-windows-amd64.exe --help
+                      ```
+                      Platform: PDF ✅, PNG ✅, JPEG ✅
+
+                      **macOS (Intel/ARM)**
+                      - ⚠️ macOS native builds currently disabled due to AWT limitations
+                      - Use Universal JAR instead (full PNG/JPEG support)
+                      - See [#28](https://github.com/namila007/BulkTextRenderer/issues/28) for details
+
+                      ### Features
+                      - Bulk text rendering on PDF, PNG, and JPEG templates
+                      - Font styling: color (hex), bold, italic
+                      - Adaptive parallel processing
+                      - Multi-column CSV support
+                      - Text alignment (left, center, right)
+                      - Custom fonts and styling

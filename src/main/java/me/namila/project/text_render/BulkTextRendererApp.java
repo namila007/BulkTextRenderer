@@ -14,6 +14,9 @@ import java.util.Arrays;
 public class BulkTextRendererApp {
 
     public static void main(String[] args) {
+        // Enable headless mode for AWT (required for native-image without display)
+        System.setProperty("java.awt.headless", "true");
+        
         // Configure logging level BEFORE Spring context initialization
         // SLF4J Simple Logger reads properties only once at startup
         configureLoggingFromArgs(args);

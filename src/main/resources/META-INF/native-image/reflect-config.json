@@ -1,0 +1,344 @@
+[
+  {
+    "name": "me.namila.project.text_render.BulkTextRendererApp",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "me.namila.project.text_render.cli.RenderCommand",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "me.namila.project.text_render.config.AppConfig",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "me.namila.project.text_render.service.CsvReaderService",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "me.namila.project.text_render.service.PdfRendererService",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "me.namila.project.text_render.service.PngRendererService",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "me.namila.project.text_render.service.JpegRendererService",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "me.namila.project.text_render.service.FontService",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "me.namila.project.text_render.service.ParallelExecutorService",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "me.namila.project.text_render.model.Alignment",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "me.namila.project.text_render.model.FontStyle",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "me.namila.project.text_render.model.MeasurementUnit",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "picocli.CommandLine",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "picocli.CommandLine$Help",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "picocli.CommandLine$Help$Ansi",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "picocli.CommandLine$Help$ColorScheme",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.springframework.context.annotation.AnnotationConfigApplicationContext",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.springframework.context.support.GenericApplicationContext",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.springframework.beans.factory.support.DefaultListableBeanFactory",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "org.springframework.core.env.StandardEnvironment",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.lowagie.text.Document",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.lowagie.text.pdf.PdfReader",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.lowagie.text.pdf.PdfStamper",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.lowagie.text.pdf.PdfWriter",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.lowagie.text.pdf.PdfContentByte",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.lowagie.text.pdf.BaseFont",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.lowagie.text.Font",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.lowagie.text.FontFactory",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "java.awt.Color",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.Font",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.Graphics2D",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.image.BufferedImage",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.GraphicsEnvironment",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.awt.X11GraphicsEnvironment",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.java2d.HeadlessGraphicsEnvironment",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "javax.imageio.spi.ImageReaderSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "javax.imageio.spi.ImageWriterSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.png.PNGImageReaderSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.png.PNGImageWriterSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.jpeg.JPEGImageWriterSpi",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.slf4j.LoggerFactory",
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.slf4j.simple.SimpleLoggerFactory",
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.slf4j.simple.SimpleLogger",
+    "allDeclaredConstructors": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "sun.font.FontManagerFactory",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.font.SunFontManager",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.font.CFontManager",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.font.FreetypeFontScaler",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.font.TrueTypeFont",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.font.Type1Font",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.awt.CGraphicsEnvironment",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.awt.CGraphicsDevice",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.awt.PlatformGraphicsInfo",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.java2d.SunGraphicsEnvironment",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.Toolkit",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.awt.SunToolkit",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.lwawt.macosx.LWCToolkit",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.awt.HeadlessToolkit",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.RenderingHints",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "java.awt.font.FontRenderContext",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.font.TextLayout",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "java.awt.geom.AffineTransform",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "javax.imageio.ImageIO",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "javax.imageio.ImageReader",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "javax.imageio.ImageWriter",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.png.PNGImageReader",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.png.PNGImageWriter",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "com.sun.imageio.plugins.jpeg.JPEGImageWriter",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  }
+]

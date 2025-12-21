@@ -47,9 +47,9 @@ class ParallelExecutorServiceTest {
         List<RenderJob> jobs = createTestJobs(5);
         ProgressTracker tracker = new ProgressTracker(5);
 
-        // When
+        // When - use threshold of 0 to force parallel execution
         long startTime = System.currentTimeMillis();
-        parallelExecutorService.executeAll(jobs, renderer, 5, tracker);
+        parallelExecutorService.executeAll(jobs, renderer, 5, tracker, 0);
         latch.await(5, TimeUnit.SECONDS);
         long duration = System.currentTimeMillis() - startTime;
 
@@ -114,8 +114,8 @@ class ParallelExecutorServiceTest {
         List<RenderJob> jobs = createTestJobs(3);
         ProgressTracker tracker = new ProgressTracker(3);
 
-        // When
-        parallelExecutorService.executeAll(jobs, renderer, 3, tracker);
+        // When - use threshold of 0 to force parallel execution with virtual threads
+        parallelExecutorService.executeAll(jobs, renderer, 3, tracker, 0);
 
         // Then - all tasks should run on virtual threads
         assertThat(isVirtual).hasSize(3);
@@ -163,6 +163,48 @@ class ParallelExecutorServiceTest {
         assertThatCode(() -> 
             parallelExecutorService.executeAll(jobs, renderer, 4, tracker)
         ).doesNotThrowAnyException();
+    }
+
+    @Test
+    void shouldExecuteSequentiallyForSmallBatches() throws Exception {
+        // Given - track execution thread
+        List<Boolean> isMainThread = new CopyOnWriteArrayList<>();
+        Thread mainThread = Thread.currentThread();
+        
+        RendererService renderer = job -> {
+            isMainThread.add(Thread.currentThread() == mainThread);
+        };
+
+        List<RenderJob> jobs = createTestJobs(3); // Below default threshold of 10
+        ProgressTracker tracker = new ProgressTracker(3);
+
+        // When - use default threshold (should run sequentially)
+        parallelExecutorService.executeAll(jobs, renderer, 3, tracker);
+
+        // Then - all tasks should run on main thread
+        assertThat(isMainThread).hasSize(3);
+        assertThat(isMainThread).allMatch(v -> v);
+        assertThat(tracker.getCompleted()).isEqualTo(3);
+    }
+
+    @Test
+    void shouldUseCustomSequentialThreshold() throws Exception {
+        // Given
+        List<Boolean> isVirtual = new CopyOnWriteArrayList<>();
+        
+        RendererService renderer = job -> {
+            isVirtual.add(Thread.currentThread().isVirtual());
+        };
+
+        List<RenderJob> jobs = createTestJobs(5);
+        ProgressTracker tracker = new ProgressTracker(5);
+
+        // When - set threshold to 3, so 5 jobs should use parallel execution
+        parallelExecutorService.executeAll(jobs, renderer, 5, tracker, 3);
+
+        // Then - should run on virtual threads (parallel mode)
+        assertThat(isVirtual).hasSize(5);
+        assertThat(isVirtual).allMatch(v -> v);
     }
 
     private List<RenderJob> createTestJobs(int count) {

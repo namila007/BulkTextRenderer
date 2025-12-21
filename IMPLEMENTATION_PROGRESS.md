@@ -110,6 +110,75 @@
 
 ---
 
+## Phase 7: GraalVM Native Image Support
+
+| Task | Status | File(s) | Notes |
+|------|--------|---------|-------|
+| Native-image plugin setup | ✅ | `build.gradle` | org.graalvm.buildtools.native 0.10.4 |
+| Reflection config | ✅ | `META-INF/native-image/reflect-config.json` | Spring, Picocli, OpenPDF, AWT classes |
+| JNI config | ✅ | `META-INF/native-image/jni-config.json` | AWT native library classes |
+| Resource config | ✅ | `META-INF/native-image/resource-config.json` | Fonts, properties, SLF4J |
+| Native-image properties | ✅ | `META-INF/native-image/native-image.properties` | Build args for SLF4J, AWT runtime init |
+| Virtual thread exception handler | ✅ | `util/VirtualThreadExceptionHandler.java` | Custom UncaughtExceptionHandler |
+| Adaptive threading strategy | ✅ | `service/ParallelExecutorService.java` | Sequential (<10 jobs) vs parallel |
+| Sequential threshold CLI option | ✅ | `cli/RenderCommand.java` | `--sequential-threshold` option |
+| Native build verification | ✅ | | PDF rendering works, PNG/JPEG limited |
+
+**GraalVM Version:** Oracle GraalVM 24.0.2 (Java 24)  
+**Native Image Size:** ~95MB
+
+### Known Limitations
+
+| Format | JAR Mode | Native Mode | Notes |
+|--------|----------|-------------|-------|
+| PDF | ✅ Works | ✅ Works | OpenPDF doesn't require AWT native libs |
+| PNG | ✅ Works | ❌ Fails | Requires AWT native libraries (libawt.dylib) |
+| JPEG | ✅ Works | ❌ Fails | Requires AWT native libraries (libawt.dylib) |
+| --list-fonts | ✅ Works | ⚠️ Partial | PDF fonts work, system fonts (AWT) unavailable |
+
+### Root Cause Analysis
+
+**Error:** `UnsatisfiedLinkError: Can't load library: awt | java.library.path = [.]`
+
+GraalVM native-image on **macOS does NOT support AWT** ([oracle/graal#4124](https://github.com/oracle/graal/issues/4124) - open since Dec 2021):
+- The `java.desktop` module is included in native-image
+- However, native libraries (`libawt.dylib`, `libawt_lwawt.dylib`, `libfontmanager.dylib`) are **not bundled**
+- Dynamic linking to JDK libraries is implemented for **Windows** and **Linux** only
+- macOS requires special handling due to Cocoa's main thread requirement for RunLoop
+
+**Platform Status:**
+| Platform | AWT Support | Since |
+|----------|-------------|-------|
+| Linux | ✅ Supported | GraalVM 21.0 |
+| Windows | ✅ Supported | GraalVM 21.3 |
+| macOS | ❌ Not Supported | Still open |
+
+### Workarounds
+
+1. **Use JAR mode for PNG/JPEG** (Recommended)
+   ```bash
+   # For PNG/JPEG rendering
+   java -jar build/libs/BulkTextRenderer-*.jar -t template.png -c names.csv -o output/
+   
+   # For PDF rendering (can use native)
+   ./build/native/nativeCompile/bulkTextRenderer -t template.pdf -c names.csv -o output/
+   ```
+
+2. **Use BellSoft Liberica NIK** - Has static AWT linking for macOS
+
+3. **Build on Linux/Windows** - Deploy native binaries from CI/CD for those platforms
+
+4. **Use Docker for macOS** - Run Linux native binary in container with port forwarding
+
+### References
+
+- [GraalVM Build Output Docs](https://www.graalvm.org/jdk24/reference-manual/native-image/overview/BuildOutput/) - AWT recommendation section
+- [macOS AWT Issue #4124](https://github.com/oracle/graal/issues/4124) - Main tracking issue
+- [AWT Windows Support #3084](https://github.com/oracle/graal/issues/3084) - Design decisions
+- [Swing Windows #3659](https://github.com/oracle/graal/issues/3659) - Windows workarounds
+
+---
+
 ## Subagent Execution Log
 
 | Phase | Subagent | Started | Completed | Duration | Issues |

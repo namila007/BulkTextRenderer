@@ -2,6 +2,7 @@ package me.namila.project.text_render.cli;
 
 import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.model.CsvEntry;
+import me.namila.project.text_render.model.FontStyle;
 import me.namila.project.text_render.model.MeasurementUnit;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
@@ -20,6 +21,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+import java.awt.Color;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -88,9 +90,26 @@ public class RenderCommand implements Callable<Integer> {
             description = "Font size (default: ${DEFAULT-VALUE})")
     private float fontSize;
 
+    @Option(names = {"-C", "--color"}, defaultValue = "#000000",
+            description = "Font color in hex format (e.g., #FF0000, #000). Default: ${DEFAULT-VALUE}")
+    private String fontColor;
+
+    @Option(names = {"-b", "--bold"},
+            description = "Use bold font style")
+    private boolean bold;
+
+    @Option(names = {"-i", "--italic"},
+            description = "Use italic font style")
+    private boolean italic;
+
     @Option(names = {"-p", "--threads"}, 
             description = "Number of parallel threads (default: available processors)")
     private Integer parallelism;
+
+    @Option(names = {"--sequential-threshold"},
+            description = "Jobs below this count are processed sequentially on main thread " +
+                         "(default: 10). Set to 0 to always use parallel processing.")
+    private Integer sequentialThreshold;
 
     @Option(names = {"--prefix"}, 
             description = "Output filename prefix")
@@ -175,20 +194,29 @@ public class RenderCommand implements Callable<Integer> {
             float yPixels = unit.toPixels(y);
             logger.debug("Coordinates converted: ({}, {}) {} -> ({}, {}) px", x, y, unit, xPixels, yPixels);
 
+            // Parse font color and style
+            Color color = TextConfig.parseHexColor(fontColor);
+            FontStyle fontStyle = FontStyle.fromFlags(bold, italic);
+            logger.debug("Font styling: color={}, style={}", fontColor, fontStyle);
+
             // Build render jobs
-            TextConfig textConfig = new TextConfig(xPixels, yPixels, alignment, fontName, fontSize);
+            TextConfig textConfig = new TextConfig(xPixels, yPixels, alignment, fontName, fontSize, color, fontStyle);
             String extension = getFileExtension(templatePath);
             List<RenderJob> jobs = entries.stream()
                 .map(entry -> createRenderJob(entry, textConfig, extension))
                 .toList();
 
-            // Execute jobs in parallel
-            logger.info("Processing {} entries with {} threads", jobs.size(), getParallelism());
-            spec.commandLine().getOut().printf("Processing %d entries with %d threads...%n", 
-                             jobs.size(), getParallelism());
+            // Determine threading strategy
+            int threshold = getSequentialThreshold();
+            String threadingMode = jobs.size() < threshold ? "sequential" : "parallel";
+            
+            logger.info("Processing {} entries ({} mode, {} threads)", 
+                       jobs.size(), threadingMode, getParallelism());
+            spec.commandLine().getOut().printf("Processing %d entries (%s mode)...%n", 
+                             jobs.size(), threadingMode);
             
             ProgressTracker tracker = new ProgressTracker(jobs.size());
-            parallelExecutorService.executeAll(jobs, renderer, getParallelism(), tracker);
+            parallelExecutorService.executeAll(jobs, renderer, getParallelism(), tracker, threshold);
 
             logger.info("Completed! Output saved to: {}", outputFolder.toAbsolutePath());
             spec.commandLine().getOut().printf("Completed! Output files saved to: %s%n", outputFolder.toAbsolutePath());
@@ -343,6 +371,10 @@ public class RenderCommand implements Callable<Integer> {
 
     public int getParallelism() {
         return parallelism != null ? parallelism : Runtime.getRuntime().availableProcessors();
+    }
+
+    public int getSequentialThreshold() {
+        return sequentialThreshold != null ? sequentialThreshold : ParallelExecutorService.DEFAULT_SEQUENTIAL_THRESHOLD;
     }
 
     public String getPrefix() {

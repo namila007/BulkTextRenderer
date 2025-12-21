@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.graalvm.buildtools.native' version '0.10.4'
 }
 
 group = 'me.namila.project.text_render'
@@ -54,4 +55,103 @@ tasks.jar {
     }
     from(configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) })
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Enable Picocli annotation processor to generate GraalVM reflection config
+compileJava {
+    options.compilerArgs += [
+        "-Aproject=${project.group}/${project.name}"
+    ]
+}
+
+// GraalVM Native Image configuration
+graalvmNative {
+    binaries {
+        main {
+            imageName = 'bulkTextRenderer'
+            mainClass = 'me.namila.project.text_render.BulkTextRendererApp'
+            
+            // Fail fast if reflection config is missing
+            fallback = false
+            
+            // Verbose output for debugging
+            verbose = true
+            
+            // Build arguments for Spring + Picocli + OpenPDF + AWT stack
+            buildArgs.addAll([
+                // SLF4J initialization at build time for faster startup
+                '--initialize-at-build-time=org.slf4j',
+                
+                // AWT/Graphics must initialize at runtime
+                '--initialize-at-run-time=sun.awt,java.awt,javax.imageio,sun.java2d,sun.font',
+                
+                // Full character set support for PDF text
+                '-H:+AddAllCharsets',
+                
+                // Better error reporting
+                '-H:+ReportExceptionStackTraces',
+                
+                // Install signal handlers
+                '--install-exit-handlers',
+                
+                // Enable URL protocols
+                '--enable-url-protocols=http,https',
+                
+                // Enable AWT support for image processing (required for PNG/JPEG rendering)
+                '-Djava.awt.headless=true',
+                
+                // Include java.desktop module explicitly (AWT + Swing support)
+                '-march=compatibility'
+            ])
+            
+            // JVM args for the native-image builder process
+            jvmArgs.addAll([
+                '-Xmx8g'
+            ])
+            
+            // Configuration files location
+            configurationFileDirectories.from(
+                file('src/main/resources/META-INF/native-image')
+            )
+            
+            // Auto-detect resources
+            resources.autodetect()
+        }
+        
+        test {
+            verbose = true
+            quickBuild = true
+        }
+    }
+    
+    // Use GraalVM Reachability Metadata Repository for common libraries
+    metadataRepository {
+        enabled = true
+    }
+    
+    // Agent configuration for collecting metadata during tests
+    agent {
+        defaultMode = 'standard'
+        metadataCopy {
+            mergeWithExisting = true
+            inputTaskNames.add('test')
+            outputDirectories.add('src/main/resources/META-INF/native-image')
+        }
+    }
+}
+
+// Helper task to run with tracing agent and collect metadata
+tasks.register('runWithAgent', JavaExec) {
+    group = 'native'
+    description = 'Run application with GraalVM tracing agent to collect metadata'
+    
+    mainClass = 'me.namila.project.text_render.BulkTextRendererApp'
+    classpath = sourceSets.main.runtimeClasspath
+    
+    jvmArgs = [
+        '-agentlib:native-image-agent=config-merge-dir=src/main/resources/META-INF/native-image'
+    ]
+    
+    // Pass command line args
+    args = project.hasProperty('appArgs') ? project.appArgs.split(',') : ['--help']
 }

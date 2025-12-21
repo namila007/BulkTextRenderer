@@ -5,6 +5,7 @@ import com.lowagie.text.FontFactory;
 import com.lowagie.text.pdf.BaseFont;
 import me.namila.project.text_render.model.FontCategory;
 import me.namila.project.text_render.model.FontInfo;
+import me.namila.project.text_render.model.FontStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,20 @@ public class FontService {
      * @return BaseFont for PDF rendering
      */
     public BaseFont createBaseFontForPdf(String fontName) {
+        return createBaseFontForPdf(fontName, FontStyle.NORMAL);
+    }
+
+    /**
+     * Creates a BaseFont for PDF rendering with font style support.
+     * 
+     * <p>For built-in fonts, the style is applied by selecting the appropriate font variant.
+     * For system fonts, the style is applied by searching for font variants (e.g., "Arial Bold").
+     * 
+     * @param fontName  the name of the font
+     * @param fontStyle the font style (NORMAL, BOLD, ITALIC, BOLD_ITALIC)
+     * @return BaseFont for PDF rendering
+     */
+    public BaseFont createBaseFontForPdf(String fontName, FontStyle fontStyle) {
         // Ensure system fonts are registered
         if (!systemFontsRegistered) {
             registerSystemFonts();
@@ -69,38 +84,115 @@ public class FontService {
         
         if (fontName == null) {
             logger.debug("No font specified, using default Times Roman");
-            return createBuiltInFont(BaseFont.TIMES_ROMAN);
+            return createBuiltInFont(getStyledBuiltInFontName(BaseFont.TIMES_ROMAN, fontStyle));
         }
         
         // First try built-in fonts (fastest)
-        Optional<BaseFont> builtIn = tryBuiltInFont(fontName);
+        Optional<BaseFont> builtIn = tryBuiltInFont(fontName, fontStyle);
         if (builtIn.isPresent()) {
-            logger.debug("Using built-in font: {}", fontName);
+            logger.debug("Using built-in font: {} with style: {}", fontName, fontStyle);
             return builtIn.get();
         }
         
         // Try to get font from FontFactory (system fonts)
-        Optional<BaseFont> systemFont = trySystemFont(fontName);
+        Optional<BaseFont> systemFont = trySystemFont(fontName, fontStyle);
         if (systemFont.isPresent()) {
-            logger.debug("Using system font: {}", fontName);
+            logger.debug("Using system font: {} with style: {}", fontName, fontStyle);
             return systemFont.get();
         }
         
-        // Fallback to Times Roman
+        // Fallback to Times Roman with requested style
         logger.warn("Font '{}' not available for PDF embedding, falling back to Times Roman. " +
-            "If the font exists on your system but can't be used, it may have lib issue.", fontName);
-        return createBuiltInFont(BaseFont.TIMES_ROMAN);
+            "If the font exists on your system but can't be used, it may have licensing restrictions.", fontName);
+        return createBuiltInFont(getStyledBuiltInFontName(BaseFont.TIMES_ROMAN, fontStyle));
     }
     
     /**
-     * Tries to create a built-in PDF font.
+     * Gets the built-in font name with the appropriate style variant.
      */
-    private Optional<BaseFont> tryBuiltInFont(String fontName) {
+    private String getStyledBuiltInFontName(String baseFontName, FontStyle fontStyle) {
+        return switch (fontStyle) {
+            case NORMAL -> baseFontName;
+            case BOLD -> baseFontName + "-Bold";
+            case ITALIC -> baseFontName + "-Oblique";
+            case BOLD_ITALIC -> baseFontName + "-BoldOblique";
+        };
+    }
+    
+    /**
+     * Tries to create a built-in PDF font with style.
+     */
+    private Optional<BaseFont> tryBuiltInFont(String fontName, FontStyle fontStyle) {
         String baseFontName = mapToBuiltInFontName(fontName);
         if (baseFontName != null) {
-            return Optional.of(createBuiltInFont(baseFontName));
+            String styledFontName = getStyledBuiltInFontName(baseFontName, fontStyle);
+            return Optional.of(createBuiltInFont(styledFontName));
         }
         return Optional.empty();
+    }
+    
+    /**
+     * Tries to create a system font with style support.
+     */
+    private Optional<BaseFont> trySystemFont(String fontName, FontStyle fontStyle) {
+        // First try the styled font name (e.g., "Arial Bold")
+        if (fontStyle != FontStyle.NORMAL) {
+            String styledName = getStyledFontName(fontName, fontStyle);
+            Optional<BaseFont> styledFont = trySystemFont(styledName);
+            if (styledFont.isPresent()) {
+                return styledFont;
+            }
+        }
+        
+        // Try the base font and apply style via FontFactory
+        return trySystemFontWithStyle(fontName, fontStyle);
+    }
+    
+    /**
+     * Creates a styled font name by appending style suffix.
+     */
+    private String getStyledFontName(String fontName, FontStyle fontStyle) {
+        return switch (fontStyle) {
+            case NORMAL -> fontName;
+            case BOLD -> fontName + " Bold";
+            case ITALIC -> fontName + " Italic";
+            case BOLD_ITALIC -> fontName + " Bold Italic";
+        };
+    }
+    
+    /**
+     * Tries to load a system font with style applied via FontFactory.
+     */
+    private Optional<BaseFont> trySystemFontWithStyle(String fontName, FontStyle fontStyle) {
+        try {
+            Set<String> registeredFonts = FontFactory.getRegisteredFonts();
+            String matchedFontName = findMatchingFont(fontName, registeredFonts);
+            
+            if (matchedFontName == null) {
+                return tryFromFontFile(fontName);
+            }
+            
+            // Convert FontStyle to OpenPDF Font style
+            int pdfFontStyle = switch (fontStyle) {
+                case NORMAL -> Font.NORMAL;
+                case BOLD -> Font.BOLD;
+                case ITALIC -> Font.ITALIC;
+                case BOLD_ITALIC -> Font.BOLDITALIC;
+            };
+            
+            Font font = FontFactory.getFont(matchedFontName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12, pdfFontStyle);
+            BaseFont baseFont = font.getBaseFont();
+            
+            if (baseFont != null) {
+                logger.debug("Successfully loaded styled system font: {} with style: {}", fontName, fontStyle);
+                return Optional.of(baseFont);
+            }
+            
+            return Optional.empty();
+        } catch (Exception e) {
+            logger.debug("Failed to load styled system font '{}': {}", fontName, e.getMessage());
+            return Optional.empty();
+        }
     }
     
     /**
@@ -453,9 +545,17 @@ public class FontService {
             }
         }
         
-        // Get all system fonts from GraphicsEnvironment
-        String[] allSystemFonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
-            .getAvailableFontFamilyNames();
+        // Get all system fonts from GraphicsEnvironment (may fail in native-image without AWT)
+        String[] allSystemFonts;
+        try {
+            allSystemFonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames();
+        } catch (UnsatisfiedLinkError | NoClassDefFoundError e) {
+            // AWT native library not available (e.g., in native-image without AWT support)
+            logger.warn("AWT native library not available. System fonts for PNG/JPEG cannot be listed.");
+            logger.warn("PNG/JPEG rendering may use only built-in fonts.");
+            allSystemFonts = new String[0];
+        }
         
         // Add fonts that are available for PNG/JPEG but not registered for PDF
         Set<String> pngJpegOnlyFonts = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
@@ -498,9 +598,15 @@ public class FontService {
      * @return set of available system font family names
      */
     public Set<String> getAvailablePngFonts() {
-        String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
-            .getAvailableFontFamilyNames();
-        return new TreeSet<>(Arrays.asList(fonts));
+        try {
+            String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames();
+            return new TreeSet<>(Arrays.asList(fonts));
+        } catch (UnsatisfiedLinkError | NoClassDefFoundError e) {
+            // AWT native library not available
+            logger.warn("AWT native library not available. Cannot list PNG fonts.");
+            return new TreeSet<>();
+        }
     }
 
     /**

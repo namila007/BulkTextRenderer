@@ -1,0 +1,279 @@
+name: Release Native Executables
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.1.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  # Delete existing release with same tag if exists
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete existing release
+        uses: dev-drprasad/delete-tag-and-release@v1.1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+        continue-on-error: true
+
+  build-linux:
+    needs: cleanup
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '24'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+          cache: 'gradle'
+
+      - name: Verify GraalVM installation
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+          native-image --version
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Build native executable
+        run: ./gradlew nativeCompile
+
+      - name: Test native executable
+        run: ./build/native/nativeCompile/bulk-text-renderer --help
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bulk-text-renderer-linux-amd64
+          path: build/native/nativeCompile/bulk-text-renderer
+          if-no-files-found: error
+
+  build-macos-intel:
+    needs: cleanup
+    runs-on: macos-13
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '24'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+          cache: 'gradle'
+
+      - name: Verify GraalVM installation
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          java --version
+          native-image --version
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Build native executable
+        run: ./gradlew nativeCompile
+
+      - name: Test native executable
+        run: ./build/native/nativeCompile/bulk-text-renderer --help
+
+      - name: Upload macOS Intel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bulk-text-renderer-macos-amd64
+          path: build/native/nativeCompile/bulk-text-renderer
+          if-no-files-found: error
+
+  build-macos-arm:
+    needs: cleanup
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '24'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+          cache: 'gradle'
+
+      - name: Verify GraalVM installation
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          java --version
+          native-image --version
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Build native executable
+        run: ./gradlew nativeCompile
+
+      - name: Test native executable
+        run: ./build/native/nativeCompile/bulk-text-renderer --help
+
+      - name: Upload macOS ARM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bulk-text-renderer-macos-arm64
+          path: build/native/nativeCompile/bulk-text-renderer
+          if-no-files-found: error
+
+  build-windows:
+    needs: cleanup
+    runs-on: windows-2022
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '24'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+          cache: 'gradle'
+
+      - name: Verify GraalVM installation
+        run: |
+          echo "GRAALVM_HOME: $env:GRAALVM_HOME"
+          java --version
+          native-image --version
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Build native executable
+        run: ./gradlew nativeCompile
+
+      - name: Test native executable
+        run: ./build/native/nativeCompile/bulk-text-renderer.exe --help
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bulk-text-renderer-windows-amd64
+          path: build/native/nativeCompile/bulk-text-renderer.exe
+          if-no-files-found: error
+
+  release:
+    needs: [build-linux, build-macos-intel, build-macos-arm, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bulk-text-renderer-linux-amd64
+          path: release/
+
+      - name: Download macOS Intel artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bulk-text-renderer-macos-amd64
+          path: release/macos-intel/
+
+      - name: Download macOS ARM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bulk-text-renderer-macos-arm64
+          path: release/macos-arm/
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: bulk-text-renderer-windows-amd64
+          path: release/
+
+      - name: Prepare release artifacts
+        run: |
+          cd release
+          mv bulk-text-renderer bulk-text-renderer-linux-amd64
+          mv macos-intel/bulk-text-renderer bulk-text-renderer-macos-amd64
+          mv macos-arm/bulk-text-renderer bulk-text-renderer-macos-arm64
+          mv bulk-text-renderer.exe bulk-text-renderer-windows-amd64.exe
+          rm -rf macos-intel macos-arm
+          chmod +x bulk-text-renderer-linux-amd64 bulk-text-renderer-macos-amd64 bulk-text-renderer-macos-arm64
+          ls -la
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: Release v${{ github.event.inputs.version }}
+          files: release/*
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ github.event.inputs.prerelease }}
+          body: |
+            ## BulkTextRenderer v${{ github.event.inputs.version }}
+            
+            Native executables built with GraalVM native-image for instant startup.
+            
+            ### Installation
+            
+            #### Linux (x64)
+            ```bash
+            chmod +x bulk-text-renderer-linux-amd64
+            ./bulk-text-renderer-linux-amd64 --help
+            ```
+            
+            #### macOS Intel (x64)
+            ```bash
+            chmod +x bulk-text-renderer-macos-amd64
+            ./bulk-text-renderer-macos-amd64 --help
+            ```
+            
+            #### macOS Apple Silicon (ARM64)
+            ```bash
+            chmod +x bulk-text-renderer-macos-arm64
+            ./bulk-text-renderer-macos-arm64 --help
+            ```
+            
+            #### Windows (x64)
+            ```cmd
+            bulk-text-renderer-windows-amd64.exe --help
+            ```
+            
+            ### Features
+            - Bulk text rendering on PDF, PNG, and JPEG templates
+            - Font styling: color (hex), bold, italic
+            - Parallel processing support
+            - Native executables with instant startup

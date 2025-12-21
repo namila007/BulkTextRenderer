@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Spring configuration for BulkTextRenderer application.
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class AppConfig {
 
     @Bean

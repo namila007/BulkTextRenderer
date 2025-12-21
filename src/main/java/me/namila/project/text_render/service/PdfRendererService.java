@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.awt.Color;
 import java.io.FileOutputStream;
 
 /**
@@ -27,6 +28,11 @@ import java.io.FileOutputStream;
  * Supports both built-in PDF fonts (Helvetica, Courier, Times Roman) and system fonts.
  * System fonts are automatically discovered and registered. If a requested font is not
  * available, falls back to Times Roman.
+ * </p>
+ * 
+ * <p>Font Styling:
+ * Supports font color (any hex color), bold, italic, and bold-italic styles.
+ * Note: Bold/italic requires the font to have the corresponding variant available.
  * </p>
  */
 @Service
@@ -60,10 +66,15 @@ public class PdfRendererService implements RendererService {
             float transformedY = pageHeight - config.y();
             logger.debug("Transformed Y coordinate: {} -> {} (page height: {})", config.y(), transformedY, pageHeight);
 
-            // Use FontService to create font with system font support
-            BaseFont baseFont = fontService.createBaseFontForPdf(config.fontName());
+            // Use FontService to create font with system font support and style
+            BaseFont baseFont = fontService.createBaseFontForPdf(config.fontName(), config.fontStyle());
             canvas.setFontAndSize(baseFont, config.fontSize());
-            logger.debug("Using font: {} at size: {}", config.fontName(), config.fontSize());
+            logger.debug("Using font: {} at size: {} with style: {}", config.fontName(), config.fontSize(), config.fontStyle());
+
+            // Apply font color
+            Color color = config.color();
+            canvas.setRGBColorFill(color.getRed(), color.getGreen(), color.getBlue());
+            logger.debug("Applied font color: #{}", String.format("%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue()));
 
             int alignment = mapAlignment(config.alignment());
 

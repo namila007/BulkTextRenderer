@@ -87,8 +87,8 @@ jacocoTestCoverageVerification {
 // SonarQube configuration
 sonar {
     properties {
-        property 'sonar.projectKey', 'bulkTextRenderer'
-        property 'sonar.projectName', 'BulkTextRenderer'
+        property "sonar.projectKey", "namila007_BulkTextRenderer"
+        property "sonar.organization", "namila007"
         property 'sonar.projectVersion', version
         property 'sonar.sourceEncoding', 'UTF-8'
         property 'sonar.java.source', '24'

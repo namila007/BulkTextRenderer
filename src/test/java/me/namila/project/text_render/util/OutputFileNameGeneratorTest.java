@@ -526,4 +526,119 @@ class OutputFileNameGeneratorTest {
             assertThat(result).isEqualTo("photo-John_Williams-edited.jpg");
         }
     }
+
+    @Nested
+    @DisplayName("Windows Path Handling Tests")
+    class WindowsPathHandlingTests {
+
+        @Test
+        void shouldHandleWindowsBackslashPaths() {
+            // Given - Windows path with backslashes
+            // On Unix, this becomes a filename; on Windows, it's a path
+            String templatePath = "C:\\Users\\Documents\\template.pdf";
+            String text = "Test Name";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then - should extract template correctly (handling both OS behaviors)
+            // On Unix: whole string is filename, extracts C:\Users\Documents\template
+            // On Windows: extracts template from path
+            assertThat(result).endsWith("-Test_Name.pdf");
+            assertThat(result).contains("template");
+        }
+
+        @Test
+        void shouldHandleMixedSlashPaths() {
+            // Given - mixed slashes
+            String templatePath = "C:/Users/Documents/templates/invitation.png";
+            String text = "Guest Name";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "png");
+
+            // Then
+            assertThat(result).isEqualTo("invitation-Guest_Name.png");
+        }
+
+        @Test
+        void shouldHandlePathsWithInvalidCharacters() {
+            // Given - path that might contain characters invalid for Path.of() on Windows
+            String templatePath = "templates/file<name>.pdf";  // < and > are invalid on Windows
+            String text = "Test";
+
+            // When - should use fallback string parsing if Path.of() fails
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then - should extract base name despite invalid chars
+            assertThat(result).contains("-Test.pdf");
+            assertThat(result).contains("file");
+        }
+
+        @Test
+        void shouldHandleUNCPaths() {
+            // Given - Windows UNC path (on Unix this is a weird filename with backslashes)
+            String templatePath = "\\\\server\\share\\templates\\document.pdf";
+            String text = "Network File";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then - should handle it (may differ by OS but should not crash)
+            assertThat(result).endsWith("-Network_File.pdf");
+            assertThat(result).contains("document");
+        }
+
+        @Test
+        void shouldHandlePathWithNoSlashes() {
+            // Given - just a filename with no path
+            String templatePath = "simple-template.pdf";
+            String text = "Test";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then
+            assertThat(result).isEqualTo("simple-template-Test.pdf");
+        }
+
+        @Test
+        void shouldHandlePathEndingWithSlash() {
+            // Given - path ending with slash (edge case)
+            String templatePath = "/templates/";
+            String text = "Test";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then - empty filename becomes "unnamed"
+            assertThat(result).contains("-Test.pdf");
+        }
+
+        @Test
+        void shouldHandleFileWithMultipleDots() {
+            // Given - file with multiple dots in name
+            String templatePath = "/path/to/my.template.v2.pdf";
+            String text = "Test";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then - should use last dot for extension
+            assertThat(result).isEqualTo("my.template.v2-Test.pdf");
+        }
+
+        @Test
+        void shouldHandleRelativePathWithDots() {
+            // Given - relative path with ..
+            String templatePath = "../templates/../../template.pdf";
+            String text = "Test";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then
+            assertThat(result).isEqualTo("template-Test.pdf");
+        }
+    }
 }

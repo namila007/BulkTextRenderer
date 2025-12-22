@@ -386,6 +386,71 @@ class RenderCommandTest {
         assertThat(stderr.toString()).doesNotContain("Unsupported template format");
     }
 
+    @Test
+    void shouldNormalizeOutputFolderToAbsolutePath() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.pdf", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+        Path relativeOutput = tempDir.resolve("./nested/../output");
+
+        // When - use relative path with . and ..
+        commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "-o", relativeOutput.toString(),
+            "--x", "100",
+            "--y", "200"
+        );
+
+        // Then - should normalize to absolute path
+        assertThat(command.getOutputFolder().isAbsolute()).isTrue();
+        assertThat(command.getOutputFolder().normalize()).isEqualTo(command.getOutputFolder());
+    }
+
+    @Test
+    void shouldCreateOutputDirectoryIfNotExists() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.pdf", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+        Path newOutputDir = tempDir.resolve("new").resolve("nested").resolve("output");
+        
+        // Ensure directory doesn't exist
+        assertThat(newOutputDir).doesNotExist();
+
+        // When
+        commandLine.execute(
+            "-t", templateFile.toString(),
+            "-c", csvFile.toString(),
+            "-o", newOutputDir.toString(),
+            "--x", "100",
+            "--y", "200"
+        );
+
+        // Then - directory should be created (even if rendering fails due to invalid content)
+        assertThat(newOutputDir).exists();
+    }
+
+    @Test
+    void shouldHandleWindowsStylePathSeparators() throws IOException {
+        // Given
+        Path templateFile = createTempFile("template.pdf", "dummy");
+        Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
+
+        // When - template path with Windows-style separators (Path normalizes internally)
+        String windowsStylePath = templateFile.toString().replace('/', '\\');
+        commandLine.execute(
+            "-t", windowsStylePath,
+            "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
+            "--x", "100",
+            "--y", "200"
+        );
+
+        // Then - should parse correctly
+        assertThat(command.getTemplatePath()).isNotNull();
+    }
+
     private Path createTempFile(String name, String content) throws IOException {
         Path file = tempDir.resolve(name);
         Files.writeString(file, content);

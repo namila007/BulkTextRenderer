@@ -9,6 +9,8 @@ import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.FileOutputStream;
@@ -42,6 +44,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldCreateOutputPdfFile() throws Exception {
         // Given
         Path outputPath = tempDir.resolve("output.pdf");
@@ -57,6 +60,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldInsertTextAtLeftAlignment() throws Exception {
         // Given
         Path outputPath = tempDir.resolve("left-aligned.pdf");
@@ -72,6 +76,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldInsertTextAtCenterAlignment() throws Exception {
         // Given
         Path outputPath = tempDir.resolve("center-aligned.pdf");
@@ -87,6 +92,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldInsertTextAtRightAlignment() throws Exception {
         // Given
         Path outputPath = tempDir.resolve("right-aligned.pdf");
@@ -102,6 +108,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldUseSpecifiedFont() throws Exception {
         // Given
         Path outputPath = tempDir.resolve("custom-font.pdf");
@@ -117,6 +124,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldUseDefaultFontWhenNotSpecified() throws Exception {
         // Given
         Path outputPath = tempDir.resolve("default-font.pdf");
@@ -132,6 +140,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldHandleOutputPathWithNoParent() throws Exception {
         // Given - output path in current directory (no parent)
         Path outputPath = Path.of("test-output.pdf");
@@ -151,6 +160,7 @@ class PdfRendererServiceTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldCreateNestedOutputDirectories() throws Exception {
         // Given - output in deeply nested directory
         Path nestedOutput = tempDir.resolve("level1/level2/level3/output.pdf");

@@ -7,7 +7,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import me.namila.project.text_render.model.Alignment;
 import me.namila.project.text_render.model.RenderJob;
 import me.namila.project.text_render.model.TextConfig;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -19,16 +19,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PdfRendererServiceTest {
 
-    private static Path templatePdf;
+    private Path templatePdf;
     private final FontService fontService = new FontService();
     private final PdfRendererService pdfRendererService = new PdfRendererService(fontService);
 
     @TempDir
     Path tempDir;
 
-    @BeforeAll
-    static void setUpTemplate(@TempDir Path sharedTempDir) throws Exception {
-        templatePdf = sharedTempDir.resolve("template.pdf");
+    @BeforeEach
+    void setUpTemplate() throws Exception {
+        // Create template in same tempDir as output to avoid Windows cross-volume issues
+        templatePdf = tempDir.resolve("template.pdf");
         createBlankPdf(templatePdf);
     }
 

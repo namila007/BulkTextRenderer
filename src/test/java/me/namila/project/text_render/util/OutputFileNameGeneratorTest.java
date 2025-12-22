@@ -640,5 +640,44 @@ class OutputFileNameGeneratorTest {
             // Then
             assertThat(result).isEqualTo("template-Test.pdf");
         }
+
+        @Test
+        void shouldHandleNullCharacterInPath() {
+            // Given - path with null character (invalid on all platforms)
+            String templatePath = "template\u0000name.pdf";
+            String text = "Test";
+
+            // When - should trigger InvalidPathException and use fallback
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then - fallback string parsing should work
+            assertThat(result).endsWith("-Test.pdf");
+        }
+
+        @Test
+        void shouldHandlePathWithOnlyInvalidCharacters() {
+            // Given - path that's entirely invalid characters
+            String templatePath = "\u0000\u0001\u0002";
+            String text = "Test";
+
+            // When - should use fallback
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then
+            assertThat(result).endsWith("-Test.pdf");
+        }
+
+        @Test
+        void shouldHandleEmptyPathAfterNormalization() {
+            // Given - path that becomes empty after normalization
+            String templatePath = "";
+            String text = "Test";
+
+            // When
+            String result = OutputFileNameGenerator.generate(templatePath, text, null, null, "pdf");
+
+            // Then - empty filename should be handled
+            assertThat(result).endsWith("-Test.pdf");
+        }
     }
 }

@@ -131,6 +131,41 @@ class PdfRendererServiceTest {
         assertThatPdfIsValid(outputPath);
     }
 
+    @Test
+    void shouldHandleOutputPathWithNoParent() throws Exception {
+        // Given - output path in current directory (no parent)
+        Path outputPath = Path.of("test-output.pdf");
+        TextConfig config = new TextConfig(100, 700, Alignment.LEFT);
+        RenderJob job = new RenderJob("Test", config, templatePdf, outputPath);
+
+        try {
+            // When
+            pdfRendererService.render(job);
+
+            // Then - should handle null parent gracefully
+            assertThat(outputPath).exists();
+        } finally {
+            // Cleanup
+            Files.deleteIfExists(outputPath);
+        }
+    }
+
+    @Test
+    void shouldCreateNestedOutputDirectories() throws Exception {
+        // Given - output in deeply nested directory
+        Path nestedOutput = tempDir.resolve("level1/level2/level3/output.pdf");
+        TextConfig config = new TextConfig(100, 700, Alignment.LEFT);
+        RenderJob job = new RenderJob("Nested Test", config, templatePdf, nestedOutput);
+
+        // When
+        pdfRendererService.render(job);
+
+        // Then - should create all parent directories
+        assertThat(nestedOutput).exists();
+        assertThat(nestedOutput.getParent()).exists();
+        assertThatPdfIsValid(nestedOutput);
+    }
+
     private void assertThatPdfIsValid(Path pdfPath) throws Exception {
         PdfReader reader = new PdfReader(pdfPath.toString());
         assertThat(reader.getNumberOfPages()).isGreaterThan(0);

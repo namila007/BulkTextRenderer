@@ -84,17 +84,19 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When - no output folder specified
+        // When - use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200"
         );
 
         // Then - should be normalized to absolute path
-        Path expectedPath = Path.of("./output").toAbsolutePath().normalize();
+        Path expectedPath = outputDir.toAbsolutePath().normalize();
         assertThat(command.getOutputFolder()).isEqualTo(expectedPath);
     }
 
@@ -103,11 +105,13 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When - no parallelism specified
+        // When - no parallelism specified, use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200"
         );
@@ -179,11 +183,13 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When - no alignment specified
+        // When - no alignment specified, use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200"
         );
@@ -197,11 +203,13 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When - no font specified
+        // When - no font specified, use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200"
         );
@@ -229,11 +237,13 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When
+        // When - use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200",
             "--prefix", "wedding"
@@ -248,11 +258,13 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When
+        // When - use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200",
             "--postfix", "final"
@@ -267,11 +279,13 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When
+        // When - use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200",
             "--prefix", "batch1",
@@ -301,11 +315,13 @@ class RenderCommandTest {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
         Path csvFile = createTempFile("names.csv", "Test");
+        Path outputDir = tempDir.resolve("output");
 
-        // When - no prefix/postfix specified
+        // When - no prefix/postfix specified, use tempDir output to avoid Windows cross-volume issues
         commandLine.execute(
             "-t", templateFile.toString(),
             "-c", csvFile.toString(),
+            "-o", outputDir.toString(),
             "--x", "100",
             "--y", "200"
         );

@@ -209,10 +209,21 @@ public class OutputFileNameGenerator {
 
     /**
      * Extracts the base name from a template path (filename without extension).
+     * Uses Path.of() with fallback to string parsing for Windows compatibility.
      */
     private static String extractBaseName(String templatePath) {
-        String fileName = Path.of(templatePath).getFileName().toString();
-        int dotIndex = fileName.lastIndexOf('.');
-        return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
+        try {
+            String fileName = Path.of(templatePath).getFileName().toString();
+            int dotIndex = fileName.lastIndexOf('.');
+            return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
+        } catch (java.nio.file.InvalidPathException e) {
+            // Fallback for Windows paths that may contain invalid characters
+            logger.debug("Path.of() failed for '{}', using string parsing fallback: {}", templatePath, e.getMessage());
+            String normalized = templatePath.replace('\\', '/');
+            int lastSlash = normalized.lastIndexOf('/');
+            String fileName = lastSlash >= 0 ? normalized.substring(lastSlash + 1) : normalized;
+            int dotIndex = fileName.lastIndexOf('.');
+            return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
+        }
     }
 }

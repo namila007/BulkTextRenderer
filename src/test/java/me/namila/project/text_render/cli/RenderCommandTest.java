@@ -93,8 +93,9 @@ class RenderCommandTest {
             "--y", "200"
         );
 
-        // Then
-        assertThat(command.getOutputFolder().toString()).isEqualTo("./output");
+        // Then - should be normalized to absolute path
+        Path expectedPath = Path.of("./output").toAbsolutePath().normalize();
+        assertThat(command.getOutputFolder()).isEqualTo(expectedPath);
     }
 
     @Test

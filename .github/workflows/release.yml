@@ -51,6 +51,12 @@ jobs:
                   java --version
                   native-image --version
 
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v5
+              with:
+                  gradle-version: wrapper
+                  cache-read-only: false
+
             - name: Grant execute permission for gradlew
               run: chmod +x gradlew
 
@@ -182,6 +188,12 @@ jobs:
                   echo "GRAALVM_HOME: $env:GRAALVM_HOME"
                   java --version
                   native-image --version
+
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v5
+              with:
+                  gradle-version: wrapper
+                  cache-read-only: false
 
             - name: Build with Gradle
               run: ./gradlew build

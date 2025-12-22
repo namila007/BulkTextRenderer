@@ -9,6 +9,8 @@ import me.namila.project.text_render.service.PdfRendererService;
 import me.namila.project.text_render.service.PngRendererService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 import picocli.CommandLine;
 
@@ -49,6 +51,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldParseAllRequiredArguments() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy pdf content");
@@ -80,6 +83,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldUseDefaultOutputFolder() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -101,6 +105,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldUseDefaultParallelism() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -179,6 +184,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldUseDefaultAlignment() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -199,6 +205,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldUseDefaultFont() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -233,6 +240,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldAcceptPrefixOption() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -254,6 +262,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldAcceptPostfixOption() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -275,6 +284,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldAcceptBothPrefixAndPostfix() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -311,6 +321,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldHaveNullPrefixAndPostfixByDefault() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -387,6 +398,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldNormalizeOutputFolderToAbsolutePath() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -408,6 +420,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldCreateOutputDirectoryIfNotExists() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");
@@ -431,6 +444,7 @@ class RenderCommandTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldHandleWindowsStylePathSeparators() throws IOException {
         // Given
         Path templateFile = createTempFile("template.pdf", "dummy");

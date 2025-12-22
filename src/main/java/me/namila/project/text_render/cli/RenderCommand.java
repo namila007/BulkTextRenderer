@@ -174,8 +174,10 @@ public class RenderCommand implements Callable<Integer> {
             }
 
             // Create output directory if it doesn't exist
+            // Normalize to absolute path for Windows compatibility
+            outputFolder = outputFolder.toAbsolutePath().normalize();
             Files.createDirectories(outputFolder);
-            logger.debug("Output directory created/verified: {}", outputFolder.toAbsolutePath());
+            logger.debug("Output directory created/verified: {}", outputFolder);
 
             // Read CSV entries (supports multi-column: name,prefix,postfix)
             List<CsvEntry> entries = csvReaderService.readEntries(csvPath);
@@ -287,13 +289,21 @@ public class RenderCommand implements Callable<Integer> {
     }
 
     private RenderJob createRenderJob(CsvEntry entry, TextConfig textConfig, String extension) {
-        // Use clean name for filename (no prefix stripping needed)
-        String outputFilename = OutputFileNameGenerator.generateFromCleanName(
-            templatePath.toString(), entry.name(), prefix, postfix, extension);
-        Path outputPath = outputFolder.resolve(outputFilename);
-        // Display text combines prefix + name + postfix
-        String displayText = entry.getDisplayText();
-        return new RenderJob(displayText, textConfig, templatePath, outputPath);
+        try {
+            // Use clean name for filename (no prefix stripping needed)
+            String outputFilename = OutputFileNameGenerator.generateFromCleanName(
+                templatePath.toString(), entry.name(), prefix, postfix, extension);
+            Path outputPath = outputFolder.resolve(outputFilename);
+            // Display text combines prefix + name + postfix
+            String displayText = entry.getDisplayText();
+            return new RenderJob(displayText, textConfig, templatePath, outputPath);
+        } catch (Exception e) {
+            String errorMsg = String.format(
+                "Failed to create render job for entry '%s': template='%s', outputFolder='%s', error=%s",
+                entry.name(), templatePath, outputFolder, e.getMessage());
+            logger.error(errorMsg, e);
+            throw new IllegalArgumentException(errorMsg, e);
+        }
     }
 
     private String getFileExtension(Path path) {

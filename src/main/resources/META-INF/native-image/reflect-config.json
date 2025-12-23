@@ -281,6 +281,16 @@
     "allDeclaredMethods": true
   },
   {
+    "name": "sun.awt.windows.WToolkit",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "sun.awt.X11.XToolkit",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
     "name": "sun.awt.HeadlessToolkit",
     "allDeclaredConstructors": true,
     "allDeclaredMethods": true

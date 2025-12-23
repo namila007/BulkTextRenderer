@@ -164,7 +164,10 @@ graalvmNative {
                 '-Djava.awt.headless=true',
                 
                 // Include java.desktop module explicitly (AWT + Swing support)
-                '-march=compatibility'
+                '-march=compatibility',
+                
+                // Include fontconfig files as resources for font support
+                '-H:IncludeResources=.*fontconfig.*'
             ])
             
             // JVM args for the native-image builder process
@@ -217,4 +220,31 @@ tasks.register('runWithAgent', JavaExec) {
     
     // Pass command line args
     args = project.hasProperty('appArgs') ? project.appArgs.split(',') : ['--help']
+}
+
+// Task to copy font configuration files alongside native executable
+tasks.register('copyFontConfig', Copy) {
+    group = 'native'
+    description = 'Copy font configuration files for native image'
+    
+    def javaHome = System.getenv('JAVA_HOME') ?: System.getProperty('java.home')
+    def sourceDir = file("${javaHome}/lib")
+    
+    from(sourceDir) {
+        include 'fontconfig.bfc'
+        include 'fontconfig.properties.src'
+    }
+    
+    into layout.buildDirectory.dir('native/nativeCompile/lib')
+    
+    doFirst {
+        if (!sourceDir.exists()) {
+            logger.warn("JAVA_HOME/lib not found at: ${sourceDir}")
+        }
+    }
+}
+
+// Make native compile depend on copying font config, and finalize with font copy
+tasks.named('nativeCompile') {
+    finalizedBy 'copyFontConfig'
 }

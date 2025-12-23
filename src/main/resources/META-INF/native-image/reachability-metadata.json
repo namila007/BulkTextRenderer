@@ -85,38 +85,50 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "groovy.lang.Closure"
-    },
-    {
-      "type": "jakarta.annotation.ManagedBean"
-    },
-    {
-      "type": "jakarta.annotation.PostConstruct"
-    },
-    {
-      "type": "jakarta.inject.Inject"
-    },
-    {
-      "type": "jakarta.inject.Named"
-    },
-    {
-      "type": "jakarta.inject.Provider"
-    },
-    {
-      "type": "jakarta.inject.Qualifier"
-    },
-    {
-      "type": "jakarta.persistence.EntityManagerFactory"
-    },
-    {
       "type": "java.awt.Color",
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
+      "type": "java.awt.Component",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.Container",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.Dimension",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
       "type": "java.awt.Font",
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
+    },
+    {
+      "type": "java.awt.Insets",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.Point",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.Rectangle",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
     },
     {
       "type": "java.awt.Graphics2D",
@@ -159,12 +171,7 @@
     },
     {
       "type": "java.io.Console",
-      "methods": [
-        {
-          "name": "isTerminal",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "isTerminal", "parameterTypes": []}]
     },
     {
       "type": "java.lang.ClassLoader"
@@ -175,12 +182,7 @@
     },
     {
       "type": "java.lang.System",
-      "methods": [
-        {
-          "name": "console",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "console", "parameterTypes": []}]
     },
     {
       "type": "java.lang.annotation.Documented"
@@ -196,81 +198,22 @@
     },
     {
       "type": "java.nio.file.Paths",
-      "methods": [
-        {
-          "name": "get",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String[]"
-          ]
-        }
-      ]
+      "methods": [{"name": "get", "parameterTypes": ["java.lang.String", "java.lang.String[]"]}]
     },
     {
-      "type": "java.sql.Connection"
+      "type": "sun.awt.AppContext",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
     },
     {
-      "type": "java.sql.Driver"
-    },
-    {
-      "type": "java.sql.DriverManager"
-    },
-    {
-      "type": "java.sql.Time"
-    },
-    {
-      "type": "java.sql.Timestamp"
-    },
-    {
-      "type": "java.time.Duration"
-    },
-    {
-      "type": "java.time.Instant"
-    },
-    {
-      "type": "java.time.LocalDate"
-    },
-    {
-      "type": "java.time.LocalDateTime"
-    },
-    {
-      "type": "java.time.LocalTime"
-    },
-    {
-      "type": "java.time.MonthDay"
-    },
-    {
-      "type": "java.time.OffsetDateTime"
-    },
-    {
-      "type": "java.time.OffsetTime"
-    },
-    {
-      "type": "java.time.Period"
-    },
-    {
-      "type": "java.time.Year"
-    },
-    {
-      "type": "java.time.YearMonth"
-    },
-    {
-      "type": "java.time.ZoneId"
-    },
-    {
-      "type": "java.time.ZoneOffset"
-    },
-    {
-      "type": "java.time.ZonedDateTime"
+      "type": "sun.awt.SunToolkit",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
     },
     {
       "type": "java.util.concurrent.Callable"
-    },
-    {
-      "type": "javax.annotation.ManagedBean"
-    },
-    {
-      "type": "javax.annotation.PostConstruct"
     },
     {
       "type": "javax.imageio.ImageIO",
@@ -296,18 +239,6 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "javax.inject.Inject"
-    },
-    {
-      "type": "javax.inject.Named"
-    },
-    {
-      "type": "javax.inject.Qualifier"
-    },
-    {
-      "type": "kotlin.Metadata"
-    },
-    {
       "type": "me.namila.project.text_render.BulkTextRendererApp",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -315,12 +246,7 @@
     },
     {
       "type": "me.namila.project.text_render.cli.MeasurementUnitConverter",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": []}]
     },
     {
       "type": "me.namila.project.text_render.cli.RenderCommand",
@@ -334,91 +260,32 @@
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true,
       "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "csvReaderService",
-          "parameterTypes": []
-        },
-        {
-          "name": "fontService",
-          "parameterTypes": []
-        },
-        {
-          "name": "jpegRendererService",
-          "parameterTypes": []
-        },
-        {
-          "name": "parallelExecutorService",
-          "parameterTypes": []
-        },
-        {
-          "name": "pdfRendererService",
-          "parameterTypes": [
-            "me.namila.project.text_render.service.FontService"
-          ]
-        },
-        {
-          "name": "pngRendererService",
-          "parameterTypes": []
-        },
-        {
-          "name": "renderCommand",
-          "parameterTypes": [
-            "me.namila.project.text_render.service.CsvReaderService",
-            "me.namila.project.text_render.service.PdfRendererService",
-            "me.namila.project.text_render.service.PngRendererService",
-            "me.namila.project.text_render.service.JpegRendererService",
-            "me.namila.project.text_render.service.ParallelExecutorService",
-            "me.namila.project.text_render.service.FontService"
-          ]
-        }
+        {"name": "<init>", "parameterTypes": []},
+        {"name": "csvReaderService", "parameterTypes": []},
+        {"name": "fontService", "parameterTypes": []},
+        {"name": "jpegRendererService", "parameterTypes": []},
+        {"name": "parallelExecutorService", "parameterTypes": []},
+        {"name": "pdfRendererService", "parameterTypes": ["me.namila.project.text_render.service.FontService"]},
+        {"name": "pngRendererService", "parameterTypes": []},
+        {"name": "renderCommand", "parameterTypes": ["me.namila.project.text_render.service.CsvReaderService", "me.namila.project.text_render.service.PdfRendererService", "me.namila.project.text_render.service.PngRendererService", "me.namila.project.text_render.service.JpegRendererService", "me.namila.project.text_render.service.ParallelExecutorService", "me.namila.project.text_render.service.FontService"]}
       ]
     },
     {
       "type": "me.namila.project.text_render.config.AppConfig$$SpringCGLIB$$0",
       "allDeclaredFields": true,
-      "fields": [
-        {
-          "name": "CGLIB$FACTORY_DATA"
-        }
-      ],
+      "fields": [{"name": "CGLIB$FACTORY_DATA"}],
       "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "CGLIB$SET_STATIC_CALLBACKS",
-          "parameterTypes": [
-            "org.springframework.cglib.proxy.Callback[]"
-          ]
-        }
+        {"name": "<init>", "parameterTypes": []},
+        {"name": "CGLIB$SET_STATIC_CALLBACKS", "parameterTypes": ["org.springframework.cglib.proxy.Callback[]"]}
       ]
     },
     {
       "type": "me.namila.project.text_render.config.AppConfig$$SpringCGLIB$$FastClass$$0",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.Class"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["java.lang.Class"]}]
     },
     {
       "type": "me.namila.project.text_render.config.AppConfig$$SpringCGLIB$$FastClass$$1",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.Class"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["java.lang.Class"]}]
     },
     {
       "type": "me.namila.project.text_render.model.Alignment",
@@ -437,6 +304,10 @@
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
+    },
+    {
+      "type": "me.namila.project.text_render.service.AbstractImageRendererService",
+      "allDeclaredFields": true
     },
     {
       "type": "me.namila.project.text_render.service.CsvReaderService",
@@ -478,21 +349,6 @@
       "type": "me.namila.project.text_render.service.RendererService"
     },
     {
-      "type": "org.apache.logging.log4j.spi.ExtendedLogger"
-    },
-    {
-      "type": "org.apache.logging.slf4j.SLF4JProvider"
-    },
-    {
-      "type": "org.crac.Core"
-    },
-    {
-      "type": "org.eclipse.core.runtime.FileLocator"
-    },
-    {
-      "type": "org.reactivestreams.Publisher"
-    },
-    {
       "type": "org.slf4j.Logger"
     },
     {
@@ -522,12 +378,7 @@
     },
     {
       "type": "org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": []}]
     },
     {
       "type": "org.springframework.beans.factory.support.DefaultListableBeanFactory",
@@ -551,30 +402,15 @@
     },
     {
       "type": "org.springframework.context.annotation.ConfigurationClassPostProcessor",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": []}]
     },
     {
       "type": "org.springframework.context.event.DefaultEventListenerFactory",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": []}]
     },
     {
       "type": "org.springframework.context.event.EventListenerMethodProcessor",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": []}]
     },
     {
       "type": "org.springframework.context.support.GenericApplicationContext",
@@ -626,14 +462,15 @@
       "type": "picocli.CommandLine$Spec"
     },
     {
-      "type": "sun.awt.CGraphicsDevice",
+      "type": "sun.awt.Win32GraphicsDevice",
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "sun.awt.CGraphicsEnvironment",
+      "type": "sun.awt.Win32GraphicsEnvironment",
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [{"name": "dwmCompositionChanged", "parameterTypes": ["boolean"]}]
     },
     {
       "type": "sun.awt.HeadlessToolkit",
@@ -646,17 +483,23 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "sun.awt.SunToolkit",
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "type": "sun.awt.windows.WDesktopPeer",
+      "methods": [
+        {"name": "systemSleepCallback", "parameterTypes": ["boolean"]},
+        {"name": "userSessionCallback", "parameterTypes": ["boolean", "java.awt.desktop.UserSessionEvent$Reason"]}
+      ]
     },
     {
-      "type": "sun.awt.X11GraphicsEnvironment",
+      "type": "sun.awt.windows.WToolkit",
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {"name": "displayChanged", "parameterTypes": []},
+        {"name": "windowsSettingChange", "parameterTypes": []}
+      ]
     },
     {
-      "type": "sun.font.CFontManager",
+      "type": "sun.awt.Win32FontManager",
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
@@ -668,7 +511,8 @@
     {
       "type": "sun.font.FreetypeFontScaler",
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [{"name": "invalidateScaler", "parameterTypes": []}]
     },
     {
       "type": "sun.font.SunFontManager",
@@ -696,272 +540,98 @@
     },
     {
       "type": "sun.java2d.marlin.DMarlinRenderingEngine",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "sun.lwawt.macosx.LWCToolkit",
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "sun.misc.Unsafe",
-      "methods": [
-        {
-          "name": "getUnsafe",
-          "parameterTypes": []
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": []}]
     }
   ],
   "jni": [
-    {
-      "type": "[Lsun.java2d.loops.GraphicsPrimitive;"
-    },
+    {"type": "[Lsun.java2d.loops.GraphicsPrimitive;"},
     {
       "type": "com.sun.imageio.plugins.jpeg.JPEGImageReader",
       "methods": [
-        {
-          "name": "acceptPixels",
-          "parameterTypes": [
-            "int",
-            "boolean"
-          ]
-        },
-        {
-          "name": "passComplete",
-          "parameterTypes": []
-        },
-        {
-          "name": "passStarted",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "pushBack",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "readInputData",
-          "parameterTypes": [
-            "byte[]",
-            "int",
-            "int"
-          ]
-        },
-        {
-          "name": "setImageData",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int",
-            "int",
-            "byte[]"
-          ]
-        },
-        {
-          "name": "skipInputBytes",
-          "parameterTypes": [
-            "long"
-          ]
-        },
-        {
-          "name": "skipPastImage",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "warningOccurred",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "warningWithMessage",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        }
+        {"name": "acceptPixels", "parameterTypes": ["int", "boolean"]},
+        {"name": "passComplete", "parameterTypes": []},
+        {"name": "passStarted", "parameterTypes": ["int"]},
+        {"name": "pushBack", "parameterTypes": ["int"]},
+        {"name": "readInputData", "parameterTypes": ["byte[]", "int", "int"]},
+        {"name": "setImageData", "parameterTypes": ["int", "int", "int", "int", "int", "byte[]"]},
+        {"name": "skipInputBytes", "parameterTypes": ["long"]},
+        {"name": "skipPastImage", "parameterTypes": ["int"]},
+        {"name": "warningOccurred", "parameterTypes": ["int"]},
+        {"name": "warningWithMessage", "parameterTypes": ["java.lang.String"]}
       ]
     },
     {
       "type": "com.sun.imageio.plugins.jpeg.JPEGImageWriter",
       "methods": [
-        {
-          "name": "grabPixels",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "warningOccurred",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "warningWithMessage",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "writeMetadata",
-          "parameterTypes": []
-        },
-        {
-          "name": "writeOutputData",
-          "parameterTypes": [
-            "byte[]",
-            "int",
-            "int"
-          ]
-        }
+        {"name": "grabPixels", "parameterTypes": ["int"]},
+        {"name": "warningOccurred", "parameterTypes": ["int"]},
+        {"name": "warningWithMessage", "parameterTypes": ["java.lang.String"]},
+        {"name": "writeMetadata", "parameterTypes": []},
+        {"name": "writeOutputData", "parameterTypes": ["byte[]", "int", "int"]}
       ]
     },
     {
       "type": "java.awt.AlphaComposite",
-      "fields": [
-        {
-          "name": "extraAlpha"
-        },
-        {
-          "name": "rule"
-        }
-      ]
+      "fields": [{"name": "extraAlpha"}, {"name": "rule"}]
     },
     {
       "type": "java.awt.Color",
+      "methods": [{"name": "getRGB", "parameterTypes": []}]
+    },
+    {"type": "java.awt.Component"},
+    {
+      "type": "java.awt.Font",
+      "fields": [{"name": "name"}, {"name": "pData"}, {"name": "size"}, {"name": "style"}],
       "methods": [
-        {
-          "name": "getRGB",
-          "parameterTypes": []
-        }
+        {"name": "getFont", "parameterTypes": ["java.lang.String"]},
+        {"name": "getFontPeer", "parameterTypes": []}
       ]
     },
     {
-      "type": "java.awt.geom.AffineTransform",
-      "fields": [
-        {
-          "name": "m00"
-        },
-        {
-          "name": "m01"
-        },
-        {
-          "name": "m02"
-        },
-        {
-          "name": "m10"
-        },
-        {
-          "name": "m11"
-        },
-        {
-          "name": "m12"
-        }
+      "type": "java.awt.Insets",
+      "methods": [{"name": "<init>", "parameterTypes": ["int", "int", "int", "int"]}]
+    },
+    {
+      "type": "java.awt.Toolkit",
+      "methods": [
+        {"name": "getDefaultToolkit", "parameterTypes": []},
+        {"name": "getFontMetrics", "parameterTypes": ["java.awt.Font"]}
       ]
+    },
+    {
+      "type": "java.awt.desktop.UserSessionEvent$Reason",
+      "fields": [{"name": "CONSOLE"}, {"name": "LOCK"}, {"name": "REMOTE"}, {"name": "UNSPECIFIED"}]
+    },
+    {
+      "type": "java.awt.geom.AffineTransform",
+      "fields": [{"name": "m00"}, {"name": "m01"}, {"name": "m02"}, {"name": "m10"}, {"name": "m11"}, {"name": "m12"}]
     },
     {
       "type": "java.awt.geom.GeneralPath",
       "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "int",
-            "byte[]",
-            "int",
-            "float[]",
-            "int"
-          ]
-        }
+        {"name": "<init>", "parameterTypes": []},
+        {"name": "<init>", "parameterTypes": ["int", "byte[]", "int", "float[]", "int"]}
       ]
     },
     {
       "type": "java.awt.geom.Path2D",
-      "fields": [
-        {
-          "name": "numTypes"
-        },
-        {
-          "name": "pointTypes"
-        },
-        {
-          "name": "windingRule"
-        }
-      ]
+      "fields": [{"name": "numTypes"}, {"name": "pointTypes"}, {"name": "windingRule"}]
     },
     {
       "type": "java.awt.geom.Path2D$Float",
-      "fields": [
-        {
-          "name": "floatCoords"
-        }
-      ]
+      "fields": [{"name": "floatCoords"}]
     },
     {
       "type": "java.awt.geom.Point2D$Float",
-      "fields": [
-        {
-          "name": "x"
-        },
-        {
-          "name": "y"
-        }
-      ],
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "float",
-            "float"
-          ]
-        }
-      ]
+      "fields": [{"name": "x"}, {"name": "y"}],
+      "methods": [{"name": "<init>", "parameterTypes": ["float", "float"]}]
     },
     {
       "type": "java.awt.geom.Rectangle2D$Float",
-      "fields": [
-        {
-          "name": "height"
-        },
-        {
-          "name": "width"
-        },
-        {
-          "name": "x"
-        },
-        {
-          "name": "y"
-        }
-      ],
+      "fields": [{"name": "height"}, {"name": "width"}, {"name": "x"}, {"name": "y"}],
       "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "float",
-            "float",
-            "float",
-            "float"
-          ]
-        }
+        {"name": "<init>", "parameterTypes": []},
+        {"name": "<init>", "parameterTypes": ["float", "float", "float", "float"]}
       ]
     },
     {
@@ -978,23 +648,7 @@
     },
     {
       "type": "java.awt.image.IndexColorModel",
-      "fields": [
-        {
-          "name": "allgrayopaque"
-        },
-        {
-          "name": "colorData"
-        },
-        {
-          "name": "map_size"
-        },
-        {
-          "name": "rgb"
-        },
-        {
-          "name": "transparent_index"
-        }
-      ]
+      "fields": [{"name": "allgrayopaque"}, {"name": "colorData"}, {"name": "map_size"}, {"name": "rgb"}, {"name": "transparent_index"}]
     },
     {
       "type": "java.awt.image.Raster",
@@ -1004,111 +658,64 @@
     },
     {
       "type": "java.awt.image.SampleModel",
-      "fields": [
-        {
-          "name": "height"
-        },
-        {
-          "name": "width"
-        }
-      ],
+      "fields": [{"name": "height"}, {"name": "width"}],
       "methods": [
-        {
-          "name": "getPixels",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int",
-            "int[]",
-            "java.awt.image.DataBuffer"
-          ]
-        },
-        {
-          "name": "setPixels",
-          "parameterTypes": [
-            "int",
-            "int",
-            "int",
-            "int",
-            "int[]",
-            "java.awt.image.DataBuffer"
-          ]
-        }
+        {"name": "getPixels", "parameterTypes": ["int", "int", "int", "int", "int[]", "java.awt.image.DataBuffer"]},
+        {"name": "setPixels", "parameterTypes": ["int", "int", "int", "int", "int[]", "java.awt.image.DataBuffer"]}
       ]
     },
     {
       "type": "java.awt.image.SinglePixelPackedSampleModel",
-      "fields": [
-        {
-          "name": "bitMasks"
-        },
-        {
-          "name": "bitOffsets"
-        },
-        {
-          "name": "bitSizes"
-        },
-        {
-          "name": "maxBitSize"
-        }
-      ]
+      "fields": [{"name": "bitMasks"}, {"name": "bitOffsets"}, {"name": "bitSizes"}, {"name": "maxBitSize"}]
     },
     {
       "type": "java.lang.Boolean",
-      "methods": [
-        {
-          "name": "getBoolean",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        }
-      ]
+      "methods": [{"name": "getBoolean", "parameterTypes": ["java.lang.String"]}]
+    },
+    {
+      "type": "java.lang.String",
+      "methods": [{"name": "toLowerCase", "parameterTypes": ["java.util.Locale"]}]
     },
     {
       "type": "java.lang.System",
       "methods": [
-        {
-          "name": "getProperty",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "load",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "loadLibrary",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        }
+        {"name": "getProperty", "parameterTypes": ["java.lang.String"]},
+        {"name": "load", "parameterTypes": ["java.lang.String"]},
+        {"name": "loadLibrary", "parameterTypes": ["java.lang.String"]}
+      ]
+    },
+    {
+      "type": "java.util.ArrayList",
+      "methods": [
+        {"name": "<init>", "parameterTypes": ["int"]},
+        {"name": "add", "parameterTypes": ["java.lang.Object"]}
+      ]
+    },
+    {
+      "type": "java.util.HashMap",
+      "methods": [
+        {"name": "containsKey", "parameterTypes": ["java.lang.Object"]},
+        {"name": "put", "parameterTypes": ["java.lang.Object", "java.lang.Object"]}
       ]
     },
     {
       "type": "javax.imageio.plugins.jpeg.JPEGHuffmanTable",
-      "fields": [
-        {
-          "name": "lengths"
-        },
-        {
-          "name": "values"
-        }
-      ]
+      "fields": [{"name": "lengths"}, {"name": "values"}]
     },
     {
       "type": "javax.imageio.plugins.jpeg.JPEGQTable",
-      "fields": [
-        {
-          "name": "qTable"
-        }
-      ]
+      "fields": [{"name": "qTable"}]
     },
     {
-      "type": "sun.awt.CGraphicsEnvironment",
+      "type": "me.namila.project.text_render.BulkTextRendererApp",
+      "methods": [{"name": "main", "parameterTypes": ["java.lang.String[]"]}]
+    },
+    {
+      "type": "sun.awt.SunHints",
+      "fields": [{"name": "INTVAL_STROKE_PURE"}]
+    },
+    {
+      "type": "sun.awt.Win32GraphicsEnvironment",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
@@ -1120,14 +727,6 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "sun.awt.SunHints",
-      "fields": [
-        {
-          "name": "INTVAL_STROKE_PURE"
-        }
-      ]
-    },
-    {
       "type": "sun.awt.image.BufImgSurfaceData",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -1135,278 +734,87 @@
     },
     {
       "type": "sun.awt.image.BufImgSurfaceData$ICMColorData",
-      "fields": [
-        {
-          "name": "pData"
-        }
-      ],
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long"
-          ]
-        }
-      ]
+      "fields": [{"name": "pData"}],
+      "methods": [{"name": "<init>", "parameterTypes": ["long"]}]
     },
     {
       "type": "sun.awt.image.ByteComponentRaster",
-      "fields": [
-        {
-          "name": "data"
-        },
-        {
-          "name": "dataOffsets"
-        },
-        {
-          "name": "pixelStride"
-        },
-        {
-          "name": "scanlineStride"
-        },
-        {
-          "name": "type"
-        }
-      ]
+      "fields": [{"name": "data"}, {"name": "dataOffsets"}, {"name": "pixelStride"}, {"name": "scanlineStride"}, {"name": "type"}]
     },
     {
       "type": "sun.awt.image.IntegerComponentRaster",
-      "fields": [
-        {
-          "name": "data"
-        },
-        {
-          "name": "dataOffsets"
-        },
-        {
-          "name": "pixelStride"
-        },
-        {
-          "name": "scanlineStride"
-        },
-        {
-          "name": "type"
-        }
-      ]
+      "fields": [{"name": "data"}, {"name": "dataOffsets"}, {"name": "pixelStride"}, {"name": "scanlineStride"}, {"name": "type"}]
     },
     {
-      "type": "sun.awt.image.SurfaceManager",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "type": "sun.awt.image.SunVolatileImage",
+      "fields": [{"name": "volSurfaceManager"}]
     },
     {
-      "type": "sun.font.CFontManager",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "type": "sun.awt.image.VolatileSurfaceManager",
+      "fields": [{"name": "sdCurrent"}]
     },
     {
       "type": "sun.font.CharToGlyphMapper",
-      "methods": [
-        {
-          "name": "charToGlyph",
-          "parameterTypes": [
-            "int"
-          ]
-        }
-      ]
+      "methods": [{"name": "charToGlyph", "parameterTypes": ["int"]}]
     },
     {
       "type": "sun.font.Font2D",
       "methods": [
-        {
-          "name": "canDisplay",
-          "parameterTypes": [
-            "char"
-          ]
-        },
-        {
-          "name": "charToGlyph",
-          "parameterTypes": [
-            "int"
-          ]
-        },
-        {
-          "name": "charToVariationGlyph",
-          "parameterTypes": [
-            "int",
-            "int"
-          ]
-        },
-        {
-          "name": "getMapper",
-          "parameterTypes": []
-        },
-        {
-          "name": "getTableBytes",
-          "parameterTypes": [
-            "int"
-          ]
-        }
+        {"name": "canDisplay", "parameterTypes": ["char"]},
+        {"name": "charToGlyph", "parameterTypes": ["int"]},
+        {"name": "charToVariationGlyph", "parameterTypes": ["int", "int"]},
+        {"name": "getMapper", "parameterTypes": []},
+        {"name": "getTableBytes", "parameterTypes": ["int"]}
       ]
     },
     {
       "type": "sun.font.FontStrike",
-      "methods": [
-        {
-          "name": "getGlyphMetrics",
-          "parameterTypes": [
-            "int"
-          ]
-        }
-      ]
+      "methods": [{"name": "getGlyphMetrics", "parameterTypes": ["int"]}]
+    },
+    {
+      "type": "sun.font.FontUtilities",
+      "methods": [{"name": "debugFonts", "parameterTypes": []}]
     },
     {
       "type": "sun.font.FreetypeFontScaler",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "methods": [{"name": "invalidateScaler", "parameterTypes": []}]
     },
     {
       "type": "sun.font.GlyphList",
-      "fields": [
-        {
-          "name": "gposx"
-        },
-        {
-          "name": "gposy"
-        },
-        {
-          "name": "images"
-        },
-        {
-          "name": "lcdRGBOrder"
-        },
-        {
-          "name": "lcdSubPixPos"
-        },
-        {
-          "name": "len"
-        },
-        {
-          "name": "positions"
-        },
-        {
-          "name": "usePositions"
-        }
-      ]
+      "fields": [{"name": "gposx"}, {"name": "gposy"}, {"name": "images"}, {"name": "lcdRGBOrder"}, {"name": "lcdSubPixPos"}, {"name": "len"}, {"name": "positions"}, {"name": "usePositions"}]
     },
     {
       "type": "sun.font.PhysicalStrike",
-      "fields": [
-        {
-          "name": "pScalerContext"
-        }
-      ],
+      "fields": [{"name": "pScalerContext"}],
       "methods": [
-        {
-          "name": "adjustPoint",
-          "parameterTypes": [
-            "java.awt.geom.Point2D$Float"
-          ]
-        },
-        {
-          "name": "getGlyphPoint",
-          "parameterTypes": [
-            "int",
-            "int"
-          ]
-        }
+        {"name": "adjustPoint", "parameterTypes": ["java.awt.geom.Point2D$Float"]},
+        {"name": "getGlyphPoint", "parameterTypes": ["int", "int"]}
       ]
     },
     {
       "type": "sun.font.StrikeMetrics",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float",
-            "float"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["float", "float", "float", "float", "float", "float", "float", "float", "float", "float"]}]
     },
     {
       "type": "sun.font.TrueTypeFont",
       "methods": [
-        {
-          "name": "readBlock",
-          "parameterTypes": [
-            "java.nio.ByteBuffer",
-            "int",
-            "int"
-          ]
-        },
-        {
-          "name": "readBytes",
-          "parameterTypes": [
-            "int",
-            "int"
-          ]
-        }
+        {"name": "readBlock", "parameterTypes": ["java.nio.ByteBuffer", "int", "int"]},
+        {"name": "readBytes", "parameterTypes": ["int", "int"]}
       ]
     },
     {
       "type": "sun.font.Type1Font",
-      "methods": [
-        {
-          "name": "readFile",
-          "parameterTypes": [
-            "java.nio.ByteBuffer"
-          ]
-        }
-      ]
+      "methods": [{"name": "readFile", "parameterTypes": ["java.nio.ByteBuffer"]}]
     },
     {
       "type": "sun.java2d.Disposer",
-      "methods": [
-        {
-          "name": "addRecord",
-          "parameterTypes": [
-            "java.lang.Object",
-            "long",
-            "long"
-          ]
-        }
-      ]
+      "methods": [{"name": "addRecord", "parameterTypes": ["java.lang.Object", "long", "long"]}]
     },
-    {
-      "type": "sun.java2d.InvalidPipeException"
-    },
-    {
-      "type": "sun.java2d.NullSurfaceData"
-    },
+    {"type": "sun.java2d.InvalidPipeException"},
+    {"type": "sun.java2d.NullSurfaceData"},
     {
       "type": "sun.java2d.SunGraphics2D",
-      "fields": [
-        {
-          "name": "clipRegion"
-        },
-        {
-          "name": "composite"
-        },
-        {
-          "name": "eargb"
-        },
-        {
-          "name": "lcdTextContrast"
-        },
-        {
-          "name": "pixel"
-        },
-        {
-          "name": "strokeHint"
-        }
-      ]
+      "fields": [{"name": "clipRegion"}, {"name": "composite"}, {"name": "eargb"}, {"name": "lcdTextContrast"}, {"name": "pixel"}, {"name": "strokeHint"}]
     },
     {
       "type": "sun.java2d.SurfaceData",
@@ -1416,452 +824,132 @@
     },
     {
       "type": "sun.java2d.loops.Blit",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.BlitBg",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.CompositeType",
-      "fields": [
-        {
-          "name": "AnyAlpha"
-        },
-        {
-          "name": "Src"
-        },
-        {
-          "name": "SrcNoEa"
-        },
-        {
-          "name": "SrcOver"
-        },
-        {
-          "name": "SrcOverNoEa"
-        },
-        {
-          "name": "Xor"
-        }
-      ]
+      "fields": [{"name": "AnyAlpha"}, {"name": "Src"}, {"name": "SrcNoEa"}, {"name": "SrcOver"}, {"name": "SrcOverNoEa"}, {"name": "Xor"}]
     },
     {
       "type": "sun.java2d.loops.DrawGlyphList",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.DrawGlyphListAA",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.DrawGlyphListLCD",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.DrawLine",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.DrawParallelogram",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.DrawPath",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.DrawPolygons",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.DrawRect",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.FillParallelogram",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.FillPath",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.FillRect",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.FillSpans",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.GraphicsPrimitive",
-      "fields": [
-        {
-          "name": "pNativePrim"
-        }
-      ]
+      "fields": [{"name": "pNativePrim"}]
     },
     {
       "type": "sun.java2d.loops.GraphicsPrimitiveMgr",
-      "methods": [
-        {
-          "name": "register",
-          "parameterTypes": [
-            "sun.java2d.loops.GraphicsPrimitive[]"
-          ]
-        }
-      ]
+      "methods": [{"name": "register", "parameterTypes": ["sun.java2d.loops.GraphicsPrimitive[]"]}]
     },
     {
       "type": "sun.java2d.loops.MaskBlit",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.MaskFill",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.ScaledBlit",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.SurfaceType",
-      "fields": [
-        {
-          "name": "Any3Byte"
-        },
-        {
-          "name": "Any4Byte"
-        },
-        {
-          "name": "AnyByte"
-        },
-        {
-          "name": "AnyColor"
-        },
-        {
-          "name": "AnyInt"
-        },
-        {
-          "name": "AnyShort"
-        },
-        {
-          "name": "ByteBinary1Bit"
-        },
-        {
-          "name": "ByteBinary2Bit"
-        },
-        {
-          "name": "ByteBinary4Bit"
-        },
-        {
-          "name": "ByteGray"
-        },
-        {
-          "name": "ByteIndexed"
-        },
-        {
-          "name": "ByteIndexedBm"
-        },
-        {
-          "name": "FourByteAbgr"
-        },
-        {
-          "name": "FourByteAbgrPre"
-        },
-        {
-          "name": "Index12Gray"
-        },
-        {
-          "name": "Index8Gray"
-        },
-        {
-          "name": "IntArgb"
-        },
-        {
-          "name": "IntArgbBm"
-        },
-        {
-          "name": "IntArgbPre"
-        },
-        {
-          "name": "IntBgr"
-        },
-        {
-          "name": "IntRgb"
-        },
-        {
-          "name": "IntRgbx"
-        },
-        {
-          "name": "OpaqueColor"
-        },
-        {
-          "name": "ThreeByteBgr"
-        },
-        {
-          "name": "Ushort4444Argb"
-        },
-        {
-          "name": "Ushort555Rgb"
-        },
-        {
-          "name": "Ushort555Rgbx"
-        },
-        {
-          "name": "Ushort565Rgb"
-        },
-        {
-          "name": "UshortGray"
-        },
-        {
-          "name": "UshortIndexed"
-        }
-      ]
+      "fields": [{"name": "Any3Byte"}, {"name": "Any4Byte"}, {"name": "AnyByte"}, {"name": "AnyColor"}, {"name": "AnyInt"}, {"name": "AnyShort"}, {"name": "ByteBinary1Bit"}, {"name": "ByteBinary2Bit"}, {"name": "ByteBinary4Bit"}, {"name": "ByteGray"}, {"name": "ByteIndexed"}, {"name": "ByteIndexedBm"}, {"name": "FourByteAbgr"}, {"name": "FourByteAbgrPre"}, {"name": "Index12Gray"}, {"name": "Index8Gray"}, {"name": "IntArgb"}, {"name": "IntArgbBm"}, {"name": "IntArgbPre"}, {"name": "IntBgr"}, {"name": "IntRgb"}, {"name": "IntRgbx"}, {"name": "OpaqueColor"}, {"name": "ThreeByteBgr"}, {"name": "Ushort4444Argb"}, {"name": "Ushort555Rgb"}, {"name": "Ushort555Rgbx"}, {"name": "Ushort565Rgb"}, {"name": "UshortGray"}, {"name": "UshortIndexed"}]
     },
     {
       "type": "sun.java2d.loops.TransformHelper",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "sun.java2d.loops.SurfaceType",
-            "sun.java2d.loops.CompositeType",
-            "sun.java2d.loops.SurfaceType"
-          ]
-        }
-      ]
+      "methods": [{"name": "<init>", "parameterTypes": ["long", "sun.java2d.loops.SurfaceType", "sun.java2d.loops.CompositeType", "sun.java2d.loops.SurfaceType"]}]
     },
     {
       "type": "sun.java2d.loops.XORComposite",
-      "fields": [
-        {
-          "name": "alphaMask"
-        },
-        {
-          "name": "xorColor"
-        },
-        {
-          "name": "xorPixel"
-        }
-      ]
+      "fields": [{"name": "alphaMask"}, {"name": "xorColor"}, {"name": "xorPixel"}]
     },
     {
       "type": "sun.java2d.pipe.Region",
-      "fields": [
-        {
-          "name": "bands"
-        },
-        {
-          "name": "endIndex"
-        },
-        {
-          "name": "hix"
-        },
-        {
-          "name": "hiy"
-        },
-        {
-          "name": "lox"
-        },
-        {
-          "name": "loy"
-        }
-      ]
+      "fields": [{"name": "bands"}, {"name": "endIndex"}, {"name": "hix"}, {"name": "hiy"}, {"name": "lox"}, {"name": "loy"}]
     },
     {
       "type": "sun.java2d.pipe.RegionIterator",
-      "fields": [
-        {
-          "name": "curIndex"
-        },
-        {
-          "name": "numXbands"
-        },
-        {
-          "name": "region"
-        }
-      ]
+      "fields": [{"name": "curIndex"}, {"name": "numXbands"}, {"name": "region"}]
     },
     {
-      "type": "sun.lwawt.macosx.LWCToolkit",
-      "methods": [
-        {
-          "name": "installToolkitThreadInJava",
-          "parameterTypes": []
-        }
-      ]
+      "type": "sun.java2d.windows.WindowsFlags",
+      "fields": [{"name": "d3dEnabled"}, {"name": "d3dSet"}, {"name": "offscreenSharingEnabled"}, {"name": "setHighDPIAware"}]
+    },
+    {
+      "type": "sun.launcher.LauncherHelper",
+      "fields": [{"name": "isStaticMain"}, {"name": "noArgMain"}],
+      "methods": [{"name": "getApplicationClass", "parameterTypes": []}]
     }
+  ],
+  "resources": [
+    {"glob": "META-INF/services/java.lang.System$LoggerFinder"},
+    {"glob": "META-INF/services/javax.imageio.spi.ImageInputStreamSpi"},
+    {"glob": "META-INF/services/javax.imageio.spi.ImageOutputStreamSpi"},
+    {"glob": "META-INF/services/javax.imageio.spi.ImageReaderSpi"},
+    {"glob": "META-INF/services/javax.imageio.spi.ImageTranscoderSpi"},
+    {"glob": "META-INF/services/javax.imageio.spi.ImageWriterSpi"},
+    {"glob": "META-INF/services/org.slf4j.spi.SLF4JServiceProvider"},
+    {"glob": "META-INF/spring.components"},
+    {"glob": "META-INF/spring.factories"},
+    {"glob": "me/namila/project/text_render/config/AppConfig.class"},
+    {"glob": "simplelogger.properties"},
+    {"glob": "spring.properties"},
+    {"module": "java.desktop", "glob": "sun/awt/resources/awt_en.properties"},
+    {"module": "java.desktop", "glob": "sun/awt/resources/awt_en_US.properties"},
+    {"module": "java.desktop", "glob": "sun/java2d/cmm/profiles/sRGB.pf"}
+  ],
+  "bundles": [
+    {"name": "sun.awt.resources.awt", "locales": ["en-US"]}
   ]
 }

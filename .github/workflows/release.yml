@@ -69,11 +69,17 @@ jobs:
             - name: Test native executable
               run: ./build/native/nativeCompile/bulkTextRenderer --help
 
+            - name: Package Linux build
+              run: |
+                  cd build/native/nativeCompile
+                  tar -czf bulkTextRenderer-linux-amd64.tar.gz *
+                  mv bulkTextRenderer-linux-amd64.tar.gz ../../..
+
             - name: Upload Linux artifact
               uses: actions/upload-artifact@v4
               with:
                   name: bulkTextRenderer-linux-amd64
-                  path: build/native/nativeCompile/bulkTextRenderer
+                  path: bulkTextRenderer-linux-amd64.tar.gz
                   if-no-files-found: error
 
             - name: Upload JAR artifact
@@ -204,11 +210,16 @@ jobs:
             - name: Test native executable
               run: ./build/native/nativeCompile/bulkTextRenderer.exe --help
 
+            - name: Package Windows build
+              run: |
+                  cd build/native/nativeCompile
+                  Compress-Archive -Path * -DestinationPath ../../../bulkTextRenderer-windows-amd64.zip
+
             - name: Upload Windows artifact
               uses: actions/upload-artifact@v4
               with:
                   name: bulkTextRenderer-windows-amd64
-                  path: build/native/nativeCompile/bulkTextRenderer.exe
+                  path: bulkTextRenderer-windows-amd64.zip
                   if-no-files-found: error
 
     release:
@@ -251,14 +262,8 @@ jobs:
             - name: Prepare release artifacts
               run: |
                   cd release
-                  mv bulkTextRenderer bulkTextRenderer-linux-amd64
-                  # mv macos-intel/bulkTextRenderer bulkTextRenderer-macos-amd64
-                  # mv macos-arm/bulkTextRenderer bulkTextRenderer-macos-arm64
-                  mv bulkTextRenderer.exe bulkTextRenderer-windows-amd64.exe
-                  # Rename JAR to include version in filename
+                  # Archives are already properly named, just rename JAR
                   mv *.jar bulkTextRenderer-${{ github.event.inputs.version }}.jar
-                  # rm -rf macos-intel macos-arm
-                  chmod +x bulkTextRenderer-linux-amd64
                   ls -la
 
             - name: Create GitHub Release
@@ -302,14 +307,23 @@ jobs:
 
                       **Linux (x64)**
                       ```bash
-                      chmod +x bulkTextRenderer-linux-amd64
-                      ./bulkTextRenderer-linux-amd64 --help
+                      # Extract the archive
+                      tar -xzf bulkTextRenderer-linux-amd64.tar.gz
+                      cd bulkTextRenderer
+                      
+                      # Run the executable
+                      ./bulkTextRenderer --help
                       ```
                       Platform: PDF ✅, PNG ✅, JPEG ✅
 
                       **Windows (x64)**
-                      ```cmd
-                      bulkTextRenderer-windows-amd64.exe --help
+                      ```powershell
+                      # Extract the archive
+                      Expand-Archive bulkTextRenderer-windows-amd64.zip -DestinationPath bulkTextRenderer
+                      cd bulkTextRenderer
+                      
+                      # Run the executable
+                      .\bulkTextRenderer.exe --help
                       ```
                       Platform: PDF ✅, PNG ✅, JPEG ✅
 

@@ -28,7 +28,10 @@ public class BulkTextRendererApp {
         initializeNativeImageSupport();
         
         // Ensure AWT runs in non-headless mode to match native-image configuration
-        System.setProperty("java.awt.headless", "false");
+        // Can be overridden by setting -Djava.awt.headless=true
+        if (System.getProperty("java.awt.headless") == null) {
+            System.setProperty("java.awt.headless", "false");
+        }
         
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         RenderCommand command = context.getBean(RenderCommand.class);

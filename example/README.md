@@ -1,43 +1,55 @@
 # Examples
 
-This directory contains sample files and commands to demonstrate the usage of BulkTextRenderer, specifically focusing on text alignment.
+Sample inputs and renders produced by BulkTextRenderer, focused on the example data under this folder.
 
-## Sample Files
-- [names.csv](names.csv): A sample CSV file with names.
-- [test.png](test.png): A sample template image.
+### Sample assets
+- `names.csv` – sample CSV with test entries
+- `test.png` – PNG template used for image rendering examples
+- `template.pdf` – PDF template used to show PDF output
+- `test.jpg` – supporting JPEG template (mirrors the PNG layout)
 
-## Alignment Examples
+### Output artifacts (example/output)
+BulkTextRenderer writes the generated files to `example/output/`. During this investigation we produced:
+- `test-Neo_Anderson.png` – PNG output with centered text
+- `test-Neo_Anderson.jpg` – JPEG output using the same alignment
+- `template-Neo_Anderson.pdf` – PDF output rendered from the sample template
 
-The following commands demonstrate how to render text with different alignments relative to a specific coordinate $(X=400, Y=400)$.
+Each file is named according to the entry in `names.csv` and the requested format.
 
-### 1. Center Alignment
-Text is centered on the point $(400, 400)$.
-```bash
-java -jar BulkTextRenderer-1.3-SNAPSHOT.jar --x=400 --y=400 -a center -c ./example/names.csv -t ./example/test.png -o ./example/
-```
-**Output:**
-![Center Alignment](test-Neo_Anderson-center.png)
+### Alignment refresher
+The rendering commands below use $(X=400, Y=400)$ as the anchor point. Set `-a center`, `-a left`, or `-a right` to control how the text aligns relative to that point.
 
-### 2. Left Alignment
-Text is positioned to the **left** of the point $(400, 400)$, meaning the text ends at $X=400$.
-```bash
-java -jar BulkTextRenderer-1.3-SNAPSHOT.jar --x=400 --y=400 -a left -c ./example/names.csv -t ./example/test.png -o ./example/
-```
-**Output:**
-![Left Alignment](test-Neo_Anderson-left.png)
+> **Note:** The examples use the font `"Felix Titling"`, which must be installed on your system.
 
-### 3. Right Alignment
-Text is positioned to the **right** of the point $(400, 400)$, meaning the text starts at $X=400$.
-```bash
-java -jar BulkTextRenderer-1.3-SNAPSHOT.jar --x=400 --y=400 -a right -c ./example/names.csv -t ./example/test.png -o ./example/
-```
-**Output:**
-![Right Alignment](test-Neo_Anderson-right.png)
+#### Base Template (`test.png`)
+![Base Template](test.png)
 
-## Visual Representation
+#### Alignment Previews
+| Left (`-a left`) | Center (`-a center`) | Right (`-a right`) |
+| :---: | :---: | :---: |
+| ![Left](test-Neo_Anderson-left.png) | ![Center](test-Neo_Anderson-center.png) | ![Right](test-Neo_Anderson-right.png) |
+
 ```
 LEFT alignment:    [Hello World]X
 CENTER alignment:  [Hello X World]
 RIGHT alignment:   X[Hello World]
 ```
-*(X marks the coordinate point 400, 400)*
+*(X marks the anchor point at 400, 400)*
+
+## Render with the native executable
+```powershell
+cd example
+..\build\native\nativeCompile\bulkTextRenderer.exe -f "Felix Titling" --x=400 --y=400 -a center -c names.csv -t test.png -o output/ -s 50
+..\build\native\nativeCompile\bulkTextRenderer.exe -f "Felix Titling" --x=400 --y=400 -a center -c names.csv -t test.jpg -o output/ -s 50
+..\build\native\nativeCompile\bulkTextRenderer.exe -f "Felix Titling" --x=400 --y=400 -a center -c names.csv -t template.pdf -o output/ -s 50
+```
+Each run saves a new file under `output/`, visible as `test-Neo_Anderson.png`, `test-Neo_Anderson.jpg`, and `template-Neo_Anderson.pdf`.
+
+## Render with the JAR
+```bash
+cd example
+java -jar ..\build\libs\BulkTextRenderer-<VERSION>.jar -f "Felix Titling" --x=400 --y=400 -a center -c names.csv -t test.png -o output/ -s 50
+java -jar ..\build\libs\BulkTextRenderer-<VERSION>.jar -f "Felix Titling" --x=400 --y=400 -a center -c names.csv -t test.jpg -o output/ -s 50
+java -jar ..\build\libs\BulkTextRenderer-<VERSION>.jar -f "Felix Titling" --x=400 --y=400 -a center -c names.csv -t template.pdf -o output/ -s 50
+```
+Use `<VERSION>` to match the JAR you just built (for example `1.3-SNAPSHOT`).

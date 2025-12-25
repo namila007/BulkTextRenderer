@@ -215,9 +215,9 @@ public abstract class AbstractImageRendererService implements RendererService {
         int textWidth = fm.stringWidth(text);
 
         return switch (alignment) {
-            case LEFT -> (int) x;
+            case LEFT -> (int) x - textWidth;   // LEFT: text ends at X (positioned to the left)
             case CENTER -> (int) x - (textWidth / 2);
-            case RIGHT -> (int) x - textWidth;
+            case RIGHT -> (int) x;              // RIGHT: text starts at X (positioned to the right)
         };
     }
 }

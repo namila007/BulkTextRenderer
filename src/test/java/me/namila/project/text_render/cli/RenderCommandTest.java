@@ -180,7 +180,7 @@ class RenderCommandTest {
 
         // Then
         assertThat(exitCode).isEqualTo(0);
-        assertThat(stdout.toString()).contains("1.0");
+        assertThat(stdout.toString()).contains("1.3");
     }
 
     @Test

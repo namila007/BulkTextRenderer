@@ -358,7 +358,7 @@ class EndToEndTest {
         // Then
         assertThat(exitCode).isZero();
         String output = stdout.toString();
-        assertThat(output).contains("1.0");
+        assertThat(output).contains("1.3");
     }
 
     @Test

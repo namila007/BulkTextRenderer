@@ -504,6 +504,21 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "sun.font.CFontManager",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {"name": "loadNativeFonts", "parameterTypes": []},
+        {"name": "populateFontFileNameMap", "parameterTypes": ["java.util.HashMap", "java.util.HashMap", "java.util.HashMap", "java.util.Locale"]}
+      ]
+    },
+    {
+      "type": "sun.lwawt.macosx.LWCToolkit",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "methods": [{"name": "getLWCToolkit", "parameterTypes": []}]
+    },
+    {
       "type": "sun.font.FontManagerFactory",
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
@@ -927,6 +942,17 @@
       "fields": [{"name": "d3dEnabled"}, {"name": "d3dSet"}, {"name": "offscreenSharingEnabled"}, {"name": "setHighDPIAware"}]
     },
     {
+      "type": "sun.lwawt.macosx.LWCToolkit",
+      "methods": [{"name": "getLWCToolkit", "parameterTypes": []}]
+    },
+    {
+      "type": "sun.font.CFontManager",
+      "methods": [
+        {"name": "loadNativeFonts", "parameterTypes": []},
+        {"name": "populateFontFileNameMap", "parameterTypes": ["java.util.HashMap", "java.util.HashMap", "java.util.HashMap", "java.util.Locale"]}
+      ]
+    },
+    {
       "type": "sun.launcher.LauncherHelper",
       "fields": [{"name": "isStaticMain"}, {"name": "noArgMain"}],
       "methods": [{"name": "getApplicationClass", "parameterTypes": []}]
@@ -947,9 +973,13 @@
     {"glob": "spring.properties"},
     {"module": "java.desktop", "glob": "sun/awt/resources/awt_en.properties"},
     {"module": "java.desktop", "glob": "sun/awt/resources/awt_en_US.properties"},
+    {"module": "java.desktop", "glob": "sun/awt/resources/awt_en_LK.properties"},
+    {"module": "java.desktop", "glob": "sun/awt/resources/awtosx_en.properties"},
+    {"module": "java.desktop", "glob": "sun/awt/resources/awtosx_en_LK.properties"},
     {"module": "java.desktop", "glob": "sun/java2d/cmm/profiles/sRGB.pf"}
   ],
   "bundles": [
-    {"name": "sun.awt.resources.awt", "locales": ["en-US"]}
+    {"name": "sun.awt.resources.awt", "locales": ["en-US", "en-LK"]},
+    {"name": "sun.awt.resources.awtosx", "locales": ["en-LK"]}
   ]
 }

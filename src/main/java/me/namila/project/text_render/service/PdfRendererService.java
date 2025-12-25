@@ -97,9 +97,9 @@ public class PdfRendererService implements RendererService {
 
     private int mapAlignment(Alignment alignment) {
         return switch (alignment) {
-            case LEFT -> PdfContentByte.ALIGN_LEFT;
+            case LEFT -> PdfContentByte.ALIGN_RIGHT;   // LEFT: text ends at X (positioned to the left)
             case CENTER -> PdfContentByte.ALIGN_CENTER;
-            case RIGHT -> PdfContentByte.ALIGN_RIGHT;
+            case RIGHT -> PdfContentByte.ALIGN_LEFT;   // RIGHT: text starts at X (positioned to the right)
         };
     }
 }

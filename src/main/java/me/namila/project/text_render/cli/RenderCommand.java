@@ -35,7 +35,7 @@ import java.util.concurrent.Callable;
 @Command(
     name = "bulk-render",
     mixinStandardHelpOptions = true,
-    version = "1.0",
+    version = "1.3",
     description = "Bulk render text onto PDF, PNG, or JPEG templates using data from a CSV file."
 )
 public class RenderCommand implements Callable<Integer> {
@@ -78,8 +78,9 @@ public class RenderCommand implements Callable<Integer> {
             description = "Measurement unit for coordinates: PX (pixels), MM (millimeters). Default: ${DEFAULT-VALUE}")
     private MeasurementUnit unit;
 
-    @Option(names = {"-a", "--align"}, defaultValue = "LEFT", 
-            description = "Text alignment: LEFT, CENTER, RIGHT (default: ${DEFAULT-VALUE})")
+    @Option(names = {"-a", "--align"}, defaultValue = "LEFT",
+            converter = AlignmentConverter.class,
+            description = "Text alignment: left, center, right (case-insensitive). Default: ${DEFAULT-VALUE}")
     private Alignment alignment;
 
     @Option(names = {"-f", "--font"}, defaultValue = "Times New Roman", 

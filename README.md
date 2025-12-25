@@ -188,7 +188,7 @@ java -jar BulkTextRenderer-{VERSION}.jar --help
 | `--x` | | X coordinate for text placement | *required* |
 | `--y` | | Y coordinate for text placement | *required* |
 | `--unit` | `-u` | Measurement unit: PX (pixels) or MM (millimeters) | `PX` |
-| `--align` | `-a` | Text alignment: LEFT, CENTER, RIGHT | `LEFT` |
+| `--align` | `-a` | Text alignment: left, center, right (case-insensitive) | `LEFT` |
 | `--font` | `-f` | Font name | `Times New Roman` |
 | `--font-size` | `-s` | Font size in points | `12` |
 | `--threads` | `-p` | Number of parallel threads (for jobs ≥ threshold) | CPU cores |
@@ -269,6 +269,28 @@ Both PDF and PNG templates use a **unified coordinate system** with **top-left o
 --x 100 --y 50
 ```
 
+### Text Alignment
+
+The `-a`/`--align` option positions text relative to the specified X coordinate:
+
+| Alignment | Behavior | Description |
+|-----------|----------|-------------|
+| `left` | `[Text]→X` | Text is positioned to the LEFT of point X (text ends at X) |
+| `center` | `Te\|xt` | Text is centered on point X |
+| `right` | `X→[Text]` | Text is positioned to the RIGHT of point X (text starts at X) |
+
+**Visual representation** (X marks the coordinate point):
+```
+LEFT alignment:    [Hello World]X
+CENTER alignment:  [Hello X World]
+RIGHT alignment:   X[Hello World]
+```
+
+**Example**: Place text centered at the horizontal middle of an A4 page:
+```bash
+--x 297 --y 100 -a center
+```
+
 ## Available Fonts
 
 Use `--list-fonts` to see all available fonts categorized as:
@@ -283,6 +305,8 @@ Fonts that work without any system dependencies:
 Any font installed on your operating system (Arial, Verdana, etc.)
 
 ## Examples
+
+For detailed visual examples and sample commands, see the [Examples Directory](example/README.md).
 
 ### Wedding Invitations (PDF)
 

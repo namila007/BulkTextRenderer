@@ -170,6 +170,36 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "java.awt.event.InputEvent",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.event.MouseEvent",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.event.KeyEvent",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.event.ComponentEvent",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.awt.AWTEvent",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
       "type": "java.io.Console",
       "methods": [{"name": "isTerminal", "parameterTypes": []}]
     },

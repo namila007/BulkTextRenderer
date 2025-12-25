@@ -309,7 +309,6 @@ jobs:
                       ```bash
                       # Extract the archive
                       tar -xzf bulkTextRenderer-linux-amd64.tar.gz
-                      cd bulkTextRenderer
                       
                       # Run the executable
                       ./bulkTextRenderer --help
@@ -319,8 +318,7 @@ jobs:
                       **Windows (x64)**
                       ```powershell
                       # Extract the archive
-                      Expand-Archive bulkTextRenderer-windows-amd64.zip -DestinationPath bulkTextRenderer
-                      cd bulkTextRenderer
+                      Expand-Archive bulkTextRenderer-windows-amd64.zip -DestinationPath .
                       
                       # Run the executable
                       .\bulkTextRenderer.exe --help

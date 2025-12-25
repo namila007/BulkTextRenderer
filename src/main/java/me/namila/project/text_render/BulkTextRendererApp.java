@@ -25,11 +25,13 @@ public class BulkTextRendererApp {
         logger = LoggerFactory.getLogger(BulkTextRendererApp.class);
         
         // Configure java.home for native-image font support
-        // FontConfiguration needs java.home to find fontconfig.bfc
         initializeNativeImageSupport();
         
-        // Enable headless mode for AWT (required for native-image without display)
-        System.setProperty("java.awt.headless", "true");
+        // Ensure AWT runs in non-headless mode to match native-image configuration
+        // Can be overridden by setting -Djava.awt.headless=true
+        if (System.getProperty("java.awt.headless") == null) {
+            System.setProperty("java.awt.headless", "false");
+        }
         
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         RenderCommand command = context.getBean(RenderCommand.class);
@@ -40,6 +42,7 @@ public class BulkTextRendererApp {
     /**
      * Initializes support for GraalVM native-image execution.
      * Sets java.home to locate fontconfig files for FontConfiguration.
+     * FontConfiguration needs java.home to find fontconfig.bfc which contains font mappings.
      * 
      * Priority order:
      * 1. Already set java.home (user override)

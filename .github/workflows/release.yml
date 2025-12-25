@@ -278,7 +278,17 @@ jobs:
                   body: |
                       ## BulkTextRenderer v${{ github.event.inputs.version }}
 
-                      ### Download Options
+                      ### 🚀 What's New in this Release
+                      This release focuses on **Windows Native Image stability** and **AI-assisted development** improvements.
+
+                      #### 🛠 Fixes & Improvements
+                      - **Windows Native Image Fix**: Resolved `NoClassDefFoundError` and `NoSuchFieldError` (e.g., `IndexColorModel`, `Dimension`) when rendering PNG and JPEG formats in native mode.
+                      - **JNI Configuration**: Added extensive JNI metadata (600+ lines) to `jni-config.json` to support AWT/Java2D graphics primitives on Windows.
+                      - **AI Coding Instructions**: Introduced `.github/copilot-instructions.md` to provide better context for AI agents (like GitHub Copilot) working on this codebase.
+                      - **Example Revamp**: Updated the `example/` directory with new templates (PDF/JPG/PNG), sample outputs, and a detailed README with alignment previews.
+                      - **Alignment Support**: Added `AlignmentConverter` for more robust CLI argument parsing.
+
+                      ### 📦 Download Options
 
                       **Universal JAR (Recommended for macOS, or any platform with Java 24+)**
                       - ✅ Works on all platforms (macOS, Linux, Windows)
@@ -290,7 +300,7 @@ jobs:
                       - 🚀 Lower memory footprint
                       - ⚠️ Platform-specific
 
-                      ### Installation
+                      ### 📖 Installation & Usage
 
                       #### Option 1: Universal JAR (All Platforms)
                       ```bash
@@ -298,42 +308,26 @@ jobs:
                       java -jar bulkTextRenderer-${{ github.event.inputs.version }}.jar --help
                       ```
 
-                      **Platform Compatibility:**
-                      - macOS: PDF ✅, PNG ✅, JPEG ✅
-                      - Linux: PDF ✅, PNG ✅, JPEG ✅
-                      - Windows: PDF ✅, PNG ✅, JPEG ✅
-
                       #### Option 2: Native Executables
 
                       **Linux (x64)**
                       ```bash
-                      # Extract the archive
                       tar -xzf bulkTextRenderer-linux-amd64.tar.gz
-                      
-                      # Run the executable
                       ./bulkTextRenderer --help
                       ```
-                      Platform: PDF ✅, PNG ✅, JPEG ✅
 
                       **Windows (x64)**
                       ```powershell
-                      # Extract the archive
                       Expand-Archive bulkTextRenderer-windows-amd64.zip -DestinationPath .
-                      
-                      # Run the executable
                       .\bulkTextRenderer.exe --help
                       ```
-                      Platform: PDF ✅, PNG ✅, JPEG ✅
 
-                      **macOS (Intel/ARM)**
-                      - ⚠️ macOS native builds currently disabled due to AWT limitations
-                      - Use Universal JAR instead (full PNG/JPEG support)
-                      - See [#28](https://github.com/namila007/BulkTextRenderer/issues/28) for details
+                      ### 🎨 Features
+                      - Bulk text rendering on **PDF, PNG, and JPEG** templates.
+                      - **Font Styling**: Color (hex), bold, italic.
+                      - **Alignment**: Left, Center, Right support with coordinate-based anchoring.
+                      - **Performance**: Adaptive parallel processing using Java Virtual Threads.
+                      - **Native Support**: GraalVM native-image support for Linux and Windows.
 
-                      ### Features
-                      - Bulk text rendering on PDF, PNG, and JPEG templates
-                      - Font styling: color (hex), bold, italic
-                      - Adaptive parallel processing
-                      - Multi-column CSV support
-                      - Text alignment (left, center, right)
-                      - Custom fonts and styling
+                      ---
+                      *Comparison with master: +1,459 lines, -1,201 lines across 28 files.*

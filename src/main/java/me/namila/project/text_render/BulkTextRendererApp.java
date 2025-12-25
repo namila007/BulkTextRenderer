@@ -47,49 +47,49 @@ public class BulkTextRendererApp {
      * 3. JAVA_HOME environment variable (fallback to external JDK)
      */
     private static void initializeNativeImageSupport() {
-        logger.debug("Initializing native image support...");
+        safeDebug("Initializing native image support...");
         
         // Skip if already set
         if (System.getProperty("java.home") != null) {
-            logger.debug("java.home already set to: {}", System.getProperty("java.home"));
+            safeDebug("java.home already set to: {}", System.getProperty("java.home"));
             return;
         }
         
         // Try to find bundled fontconfig relative to executable
         String executablePath = findExecutablePath();
-        logger.debug("Detected executable path: {}", executablePath);
+        safeDebug("Detected executable path: {}", executablePath);
         
         if (executablePath != null) {
             File execDir = new File(executablePath).getParentFile();
             File bundledFontConfig = new File(execDir, "lib/fontconfig.bfc");
             
-            logger.debug("Checking for bundled fontconfig at: {}", bundledFontConfig.getAbsolutePath());
+            safeDebug("Checking for bundled fontconfig at: {}", bundledFontConfig.getAbsolutePath());
             
             if (bundledFontConfig.exists()) {
                 // Set java.home to executable directory (fontconfig.bfc is in lib subdirectory)
                 System.setProperty("java.home", execDir.getAbsolutePath());
-                logger.debug("Set java.home to bundled location: {}", execDir.getAbsolutePath());
+                safeDebug("Set java.home to bundled location: {}", execDir.getAbsolutePath());
                 return;
             } else {
-                logger.debug("Bundled fontconfig not found at: {}", bundledFontConfig.getAbsolutePath());
+                safeDebug("Bundled fontconfig not found at: {}", bundledFontConfig.getAbsolutePath());
             }
         }
         
         // Fallback: Try JAVA_HOME environment variable
         String javaHome = System.getenv("JAVA_HOME");
-        logger.debug("Falling back to JAVA_HOME environment variable: {}", javaHome);
+        safeDebug("Falling back to JAVA_HOME environment variable: {}", javaHome);
         
         if (javaHome != null && !javaHome.isEmpty()) {
             File fontConfig = new File(javaHome, "lib/fontconfig.bfc");
-            logger.debug("Checking for fontconfig in JAVA_HOME at: {}", fontConfig.getAbsolutePath());
+            safeDebug("Checking for fontconfig in JAVA_HOME at: {}", fontConfig.getAbsolutePath());
             if (fontConfig.exists()) {
                 System.setProperty("java.home", javaHome);
-                logger.debug("Set java.home to JAVA_HOME: {}", javaHome);
+                safeDebug("Set java.home to JAVA_HOME: {}", javaHome);
             } else {
-                logger.debug("fontconfig.bfc not found in JAVA_HOME/lib");
+                safeDebug("fontconfig.bfc not found in JAVA_HOME/lib");
             }
         } else {
-            logger.debug("JAVA_HOME environment variable is not set");
+            safeDebug("JAVA_HOME environment variable is not set");
         }
     }
     
@@ -106,15 +106,15 @@ public class BulkTextRendererApp {
                 .getLocation()
                 .toURI());
             String path = classPath.toAbsolutePath().toString();
-            logger.debug("Code source location: {}", path);
+            safeDebug("Code source location: {}", path);
             return path;
         } catch (URISyntaxException | SecurityException | NullPointerException e) {
-            logger.debug("Failed to get code source location: {}", e.getMessage());
+            safeDebug("Failed to get code source location: {}", e.getMessage());
         }
         
         // Alternative: Use system property that GraalVM might set
         String processPath = System.getProperty("sun.java.command");
-        logger.debug("sun.java.command: {}", processPath);
+        safeDebug("sun.java.command: {}", processPath);
         
         if (processPath != null && !processPath.isEmpty()) {
             // For native-image, this might be the executable path
@@ -128,6 +128,16 @@ public class BulkTextRendererApp {
         }
         
         return null;
+    }
+    
+    /**
+     * Safe debug logging that handles null logger gracefully.
+     * Used during early initialization before logger is set up.
+     */
+    private static void safeDebug(String message, Object... args) {
+        if (logger != null) {
+            logger.debug(message, args);
+        }
     }
     
     /**
